@@ -58,24 +58,20 @@ async function updateRow(sheets, sheetName, row, values) {
 
 async function deleteRow(sheets, sheetName, rowIndex) {
   const meta = await sheets.spreadsheets.get({ spreadsheetId: SHEET_ID });
-  const sheet = meta.data.sheets.find(
-    (s) => s.properties.title === sheetName
-  );
+  const sheet = meta.data.sheets.find((s) => s.properties.title === sheetName);
   await sheets.spreadsheets.batchUpdate({
     spreadsheetId: SHEET_ID,
     resource: {
-      requests: [
-        {
-          deleteDimension: {
-            range: {
-              sheetId: sheet.properties.sheetId,
-              dimension: "ROWS",
-              startIndex: rowIndex - 1,
-              endIndex: rowIndex,
-            },
+      requests: [{
+        deleteDimension: {
+          range: {
+            sheetId: sheet.properties.sheetId,
+            dimension: "ROWS",
+            startIndex: rowIndex - 1,
+            endIndex: rowIndex,
           },
         },
-      ],
+      }],
     },
   });
 }
@@ -102,7 +98,7 @@ function formatDate(dateVal) {
   return `${pad(d.getMonth() + 1)}.${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-// --- 핸들러 함수들 ---
+// --- 핸들러 ---
 
 async function handleGetInitData({ grade, group }) {
   const sheets = await getSheets();
@@ -126,11 +122,12 @@ async function handleGetPosts({ classTitle, grade, group, targetLang }) {
     readSheet(sheets, "Settings"),
   ]);
 
-  let ex = "", desc = "";
+  let ex = "", desc = "", popup = "";
   for (let j = 1; j < setRows.length; j++) {
     if (setRows[j][0] === classTitle && setRows[j][1] === grade && setRows[j][2] === group) {
       desc = setRows[j][3] || "";
       ex = setRows[j][5] || "";
+      popup = setRows[j][6] || "";
       break;
     }
   }
@@ -139,6 +136,7 @@ async function handleGetPosts({ classTitle, grade, group, targetLang }) {
     title: await safeTranslate(classTitle, targetLang),
     desc: await safeTranslate(desc, targetLang),
     example: await safeTranslate(ex, targetLang),
+    popup: await safeTranslate(popup, targetLang),
     posts: [],
   };
 
@@ -164,6 +162,7 @@ async function handleGetPosts({ classTitle, grade, group, targetLang }) {
         message: msg,
         imgs: data[i][9] ? data[i][9].split("|") : [],
         likes: data[i][10] || 0,
+        pinned: (data[i][17] || "").toString() === "PIN",
         time: formatDate(data[i][0]),
         origSub: data[i][6] || "",
         origMsg: data[i][7] || "",
@@ -171,6 +170,9 @@ async function handleGetPosts({ classTitle, grade, group, targetLang }) {
       });
     }
   }
+
+  // 핀된 게시물 최상단 정렬
+  result.posts.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
   return result;
 }
 
@@ -198,13 +200,15 @@ async function handleProcessForm(formObject) {
     }
     if (rowIdx < 0) throw new Error("비밀번호 불일치");
     if (formObject.mode === "edit") {
+      const existing = data[rowIdx - 1];
       await updateRow(sheets, "Data", rowIdx, [
-        data[rowIdx - 1][0], data[rowIdx - 1][1], data[rowIdx - 1][2], data[rowIdx - 1][3],
-        data[rowIdx - 1][4], data[rowIdx - 1][5],
+        existing[0], existing[1], existing[2], existing[3],
+        existing[4], existing[5],
         formObject.subject, formObject.message,
-        data[rowIdx - 1][8], formObject.combinedImageData,
-        data[rowIdx - 1][10],
+        existing[8], formObject.combinedImageData,
+        existing[10],
         sub_zh, msg_zh, sub_ru, msg_ru, sub_ko, msg_ko,
+        existing[17] || "",
       ]);
     } else {
       await deleteRow(sheets, "Data", rowIdx);
@@ -215,7 +219,7 @@ async function handleProcessForm(formObject) {
       now, formObject.classTitle, formObject.grade, formObject.group,
       formObject.num, formObject.name, formObject.subject, formObject.message,
       formObject.password, formObject.combinedImageData, 0,
-      sub_zh, msg_zh, sub_ru, msg_ru, sub_ko, msg_ko,
+      sub_zh, msg_zh, sub_ru, msg_ru, sub_ko, msg_ko, "",
     ]);
   }
   return handleGetPosts({
@@ -240,6 +244,19 @@ async function handleToggleLike({ postId, isCancel }) {
   return 0;
 }
 
+async function handleTogglePin({ pw, postId, isPinned }) {
+  if (pw !== ADMIN_PW) throw new Error("권한이 없습니다.");
+  const sheets = await getSheets();
+  const data = await readSheet(sheets, "Data");
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0].toString() === postId) {
+      await updateCell(sheets, "Data", i + 1, 18, isPinned ? "PIN" : "");
+      return true;
+    }
+  }
+  return false;
+}
+
 async function handleAddClass({ adminPw, classInfo }) {
   if (adminPw !== ADMIN_PW) throw new Error("비밀번호 불일치");
   const sheets = await getSheets();
@@ -249,14 +266,14 @@ async function handleAddClass({ adminPw, classInfo }) {
     const existingStatus = (data[rowNum - 1] || [])[4] || "ON";
     await updateRow(sheets, "Settings", rowNum, [
       classInfo.name, classInfo.grade, classInfo.group,
-      classInfo.desc, existingStatus, classInfo.ex,
+      classInfo.desc, existingStatus, classInfo.ex, classInfo.popup || "",
     ]);
   } else {
     const targets = classInfo.targetClasses;
     if (!targets || targets.length === 0) throw new Error("대상 학급을 선택해주세요.");
     for (const t of targets) {
       await appendRow(sheets, "Settings", [
-        classInfo.name, t.grade, t.group, classInfo.desc, "ON", classInfo.ex,
+        classInfo.name, t.grade, t.group, classInfo.desc, "ON", classInfo.ex, classInfo.popup || "",
       ]);
     }
   }
@@ -282,6 +299,7 @@ async function handleGetSettingsList({ pw }) {
     desc: r[3] || "",
     status: r[4] || "",
     ex: r[5] || "",
+    popup: r[6] || "",
   }));
 }
 
@@ -302,43 +320,31 @@ exports.handler = async (event) => {
     "Access-Control-Allow-Headers": "Content-Type",
   };
 
-  if (event.httpMethod === "OPTIONS") {
-    return { statusCode: 200, headers, body: "" };
-  }
-
-  if (event.httpMethod !== "POST") {
-    return { statusCode: 405, headers, body: JSON.stringify({ error: "Method Not Allowed" }) };
-  }
+  if (event.httpMethod === "OPTIONS") return { statusCode: 200, headers, body: "" };
+  if (event.httpMethod !== "POST") return { statusCode: 405, headers, body: JSON.stringify({ error: "Method Not Allowed" }) };
 
   let body;
-  try {
-    body = JSON.parse(event.body || "{}");
-  } catch {
-    return { statusCode: 400, headers, body: JSON.stringify({ error: "Invalid JSON" }) };
-  }
+  try { body = JSON.parse(event.body || "{}"); }
+  catch { return { statusCode: 400, headers, body: JSON.stringify({ error: "Invalid JSON" }) }; }
 
   const { fn, ...params } = body;
 
   try {
     let result;
     switch (fn) {
-      case "getInitData":     result = await handleGetInitData(params); break;
-      case "getPosts":        result = await handleGetPosts(params); break;
-      case "processForm":     result = await handleProcessForm(params); break;
-      case "toggleLike":      result = await handleToggleLike(params); break;
-      case "addClass":        result = await handleAddClass(params); break;
+      case "getInitData":       result = await handleGetInitData(params); break;
+      case "getPosts":          result = await handleGetPosts(params); break;
+      case "processForm":       result = await handleProcessForm(params); break;
+      case "toggleLike":        result = await handleToggleLike(params); break;
+      case "togglePin":         result = await handleTogglePin(params); break;
+      case "addClass":          result = await handleAddClass(params); break;
       case "updateClassStatus": result = await handleUpdateClassStatus(params); break;
-      case "getSettingsList": result = await handleGetSettingsList(params); break;
-      case "deleteClass":     result = await handleDeleteClass(params); break;
-      default:
-        return { statusCode: 400, headers, body: JSON.stringify({ error: `Unknown function: ${fn}` }) };
+      case "getSettingsList":   result = await handleGetSettingsList(params); break;
+      case "deleteClass":       result = await handleDeleteClass(params); break;
+      default: return { statusCode: 400, headers, body: JSON.stringify({ error: `Unknown function: ${fn}` }) };
     }
     return { statusCode: 200, headers, body: JSON.stringify({ ok: true, result }) };
   } catch (err) {
-    return {
-      statusCode: 400,
-      headers,
-      body: JSON.stringify({ ok: false, error: err.message }),
-    };
+    return { statusCode: 400, headers, body: JSON.stringify({ ok: false, error: err.message }) };
   }
 };
