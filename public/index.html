@@ -4,33 +4,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>관산중학교 정보 게시판</title>
+  <link rel="icon" href="/관산중로고.png">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
   <style>
     /* ── 토큰 ── */
     :root {
-      --glass: rgba(255,255,255,0.2);
-      --glass-strong: rgba(255,255,255,0.32);
-      --glass-nav: rgba(255,255,255,0.25);
-      --border: rgba(255,255,255,0.55);
-      --border-card: rgba(255,255,255,0.45);
-      --highlight: inset 0 1px 0 rgba(255,255,255,0.65);
+      --glass: rgba(255,255,255,0.28);
+      --glass-strong: rgba(255,255,255,0.42);
+      --glass-nav: rgba(255,255,255,0.3);
+      --border: rgba(255,255,255,0.6);
+      --border-card: rgba(255,255,255,0.48);
+      --highlight: inset 0 1px 0 rgba(255,255,255,0.7);
       --text: #1a1f2e;
       --sub: #7a849a;
       --accent: #2a5ce6;
       --accent-light: rgba(42,92,230,0.12);
       --blur: blur(28px);
       --shadow: 0 4px 20px rgba(60,80,160,0.1);
-      --shadow-md: 0 8px 32px rgba(60,80,160,0.16);
-      --radius: 16px;
+      --shadow-md: 0 8px 32px rgba(60,80,160,0.18);
+      --radius: 18px;
       --radius-sm: 11px;
     }
     body.dark {
-      --glass: rgba(255,255,255,0.06);
-      --glass-strong: rgba(255,255,255,0.1);
-      --glass-nav: rgba(10,12,25,0.6);
+      --glass: rgba(255,255,255,0.07);
+      --glass-strong: rgba(255,255,255,0.11);
+      --glass-nav: rgba(10,12,25,0.65);
       --border: rgba(255,255,255,0.14);
       --border-card: rgba(255,255,255,0.1);
-      --highlight: inset 0 1px 0 rgba(255,255,255,0.12);
+      --highlight: inset 0 1px 0 rgba(255,255,255,0.1);
       --text: #dde2f0;
       --sub: #525a70;
       --accent: #4f8df7;
@@ -39,21 +40,19 @@
       --shadow-md: 0 8px 32px rgba(0,0,0,0.55);
     }
 
-    /* ── 리셋 ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background:
         radial-gradient(ellipse at 15% 20%, #b8caff 0%, transparent 50%),
         radial-gradient(ellipse at 85% 10%, #d4b8ff 0%, transparent 45%),
         radial-gradient(ellipse at 60% 80%, #b8e0ff 0%, transparent 50%),
-        radial-gradient(ellipse at 5% 90%, #c8d4ff 0%, transparent 40%),
+        radial-gradient(ellipse at 5%  90%, #c8d4ff 0%, transparent 40%),
         #cdd8ff;
       background-attachment: fixed;
       color: var(--text);
       font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 15px; line-height: 1.6;
+      font-size: 16px; line-height: 1.7;
       min-height: 100vh;
-      transition: color 0.3s;
     }
     body.dark {
       background:
@@ -66,7 +65,7 @@
     .hidden { display: none !important; }
 
     /* ── 레이아웃 ── */
-    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px 60px; }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px 80px; }
 
     /* ── 네비 ── */
     .nav {
@@ -74,35 +73,30 @@
       background: var(--glass-nav);
       backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
       border-bottom: 1px solid var(--border);
-      box-shadow: 0 1px 0 rgba(255,255,255,0.4), var(--shadow);
-      padding: 0 28px; height: 56px;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.35), var(--shadow);
+      padding: 0 28px; height: 58px;
       display: flex; align-items: center; justify-content: space-between;
-      transition: background 0.3s;
     }
     .nav-left, .nav-right { display: flex; align-items: center; gap: 8px; }
-    .nav-logo { font-weight: 700; font-size: 0.95rem; color: var(--text); }
+    .nav-logo { cursor: pointer; display: flex; align-items: center; }
+    .nav-logo img { height: 32px; width: auto; object-fit: contain; display: block; }
 
-    /* 햄버거 (모바일) */
     .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
-    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: 0.3s; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; }
     .mobile-menu {
-      display: none; position: fixed; inset: 56px 0 0 0; z-index: 190;
-      background: var(--glass-nav);
-      backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+      display: none; position: fixed; inset: 58px 0 0 0; z-index: 190;
+      background: var(--glass-nav); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
       border-top: 1px solid var(--border);
-      flex-direction: column; padding: 20px 24px; gap: 12px;
+      flex-direction: column; padding: 20px 24px; gap: 14px;
     }
     .mobile-menu.open { display: flex; }
-    @media (max-width: 600px) {
-      .hamburger { display: flex; }
-      .nav-right { display: none; }
-    }
+    @media (max-width: 600px) { .hamburger { display: flex; } .nav-right { display: none; } }
 
     /* ── 버튼 ── */
     .btn {
       font-family: inherit; font-size: 0.85rem; font-weight: 600;
       cursor: pointer; border-radius: 50px;
-      padding: 8px 18px; border: 1px solid var(--border);
+      padding: 7px 18px; border: 1px solid var(--border);
       background: var(--glass); color: var(--text);
       backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
       box-shadow: var(--highlight), var(--shadow);
@@ -112,102 +106,87 @@
     .btn:hover { background: var(--glass-strong); box-shadow: var(--highlight), var(--shadow-md); }
     .btn:active { transform: scale(0.96); }
     .btn.accent {
-      background: rgba(42,92,230,0.8);
-      backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
-      border-color: rgba(100,140,255,0.5); color: #fff;
+      background: rgba(42,92,230,0.82); border-color: rgba(100,140,255,0.5); color: #fff;
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 20px rgba(42,92,230,0.35);
     }
-    .btn.accent:hover { background: rgba(42,92,230,0.9); box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 6px 24px rgba(42,92,230,0.45); }
+    .btn.accent:hover { background: rgba(42,92,230,0.95); box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 6px 24px rgba(42,92,230,0.45); }
     .btn.ghost { border-color: transparent; background: transparent; box-shadow: none; }
     .btn.ghost:hover { background: var(--glass); box-shadow: var(--highlight); }
-    .btn.full { width: 100%; padding: 13px; font-size: 0.95rem; border-radius: var(--radius); }
+    .btn.full { width: 100%; padding: 14px; font-size: 1rem; border-radius: var(--radius); }
     .btn.danger { color: #ef4444; border-color: rgba(239,68,68,0.3); background: rgba(239,68,68,0.08); box-shadow: none; }
-    .btn.danger:hover { background: rgba(239,68,68,0.15); }
 
     /* ── 언어 버튼 ── */
     .lang-btn { padding: 5px 13px; font-size: 0.8rem; }
-    .lang-btn.active { background: rgba(42,92,230,0.8); border-color: rgba(100,140,255,0.5); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 2px 10px rgba(42,92,230,0.3); }
+    .lang-btn.active { background: rgba(42,92,230,0.82); border-color: rgba(100,140,255,0.5); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 2px 10px rgba(42,92,230,0.3); }
 
     /* ── 다크 토글 ── */
     .dark-toggle {
       width: 42px; height: 24px; border-radius: 50px;
       background: var(--glass); border: 1px solid var(--border);
       backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
-      box-shadow: var(--highlight);
-      cursor: pointer; position: relative; transition: 0.3s;
-      flex-shrink: 0;
+      box-shadow: var(--highlight); cursor: pointer; position: relative; transition: 0.3s; flex-shrink: 0;
     }
     body.dark .dark-toggle { background: rgba(42,92,230,0.6); border-color: rgba(100,140,255,0.4); }
     .dark-toggle::after {
       content: ''; position: absolute; top: 3px; left: 3px;
       width: 16px; height: 16px; border-radius: 50%;
-      background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-      transition: transform 0.3s;
+      background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.2); transition: transform 0.3s;
     }
     body.dark .dark-toggle::after { transform: translateX(18px); }
 
-    /* ── 인풋 공통 ── */
+    /* ── 인풋 ── */
     .inp {
       width: 100%; padding: 11px 14px; border-radius: var(--radius-sm);
       border: 1px solid var(--border-card);
       background: var(--glass); color: var(--text);
       backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
       box-shadow: var(--highlight);
-      font-family: inherit; font-size: 0.9rem;
-      transition: border-color 0.2s, box-shadow 0.2s; outline: none;
+      font-family: inherit; font-size: 0.95rem; outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
     .inp::placeholder { color: var(--sub); }
-    .inp:focus { border-color: rgba(42,92,230,0.6); box-shadow: var(--highlight), 0 0 0 3px rgba(42,92,230,0.15); }
-    textarea.inp { resize: vertical; min-height: 90px; line-height: 1.6; }
+    .inp:focus { border-color: rgba(42,92,230,0.55); box-shadow: var(--highlight), 0 0 0 3px rgba(42,92,230,0.15); }
+    textarea.inp { resize: vertical; min-height: 96px; line-height: 1.65; }
     select.inp { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
 
-    /* Floating label */
-    .field { position: relative; margin-bottom: 12px; }
-    .field label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--sub); margin-bottom: 5px; letter-spacing: 0.03em; text-transform: uppercase; }
+    .field { margin-bottom: 13px; }
+    .field label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--sub); margin-bottom: 5px; letter-spacing: 0.05em; text-transform: uppercase; }
 
     /* ── 스텝 1 ── */
-    .step1-wrap { display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 56px); }
-    .select-card { width: 100%; max-width: 420px; background: var(--glass-strong); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); border: 1px solid var(--border); border-radius: 24px; padding: 36px; box-shadow: var(--highlight), var(--shadow-md); }
+    .step1-wrap { display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 58px); }
+    .select-card { width: 100%; max-width: 400px; background: var(--glass-strong); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); border: 1px solid var(--border); border-radius: 24px; padding: 36px; box-shadow: var(--highlight), var(--shadow-md); }
     .select-card h1 { font-size: 1.5rem; font-weight: 800; margin-bottom: 28px; text-align: center; }
-    .select-card h1 span { color: var(--accent); }
 
     /* ── 게시판 헤더 ── */
-    .board-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 28px 0 20px; flex-wrap: wrap; }
-    .board-title { font-size: 1.7rem; font-weight: 800; }
-    .board-desc { font-size: 0.92rem; color: var(--sub); margin-top: 4px; }
-    .header-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .board-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; padding: 28px 0 18px; flex-wrap: wrap; }
+    .board-title { font-size: 1.6rem; font-weight: 800; line-height: 1.2; }
+    .board-desc { font-size: 0.9rem; color: var(--sub); margin-top: 4px; }
 
-    /* ── 정렬/검색 바 ── */
-    .toolbar { display: flex; gap: 8px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
-    .search-wrap { position: relative; flex: 1; min-width: 180px; }
-    .search-wrap .inp { padding-left: 36px; }
-    .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--sub); font-size: 0.9rem; pointer-events: none; }
+    /* ── 툴바 ── */
+    .toolbar { display: flex; gap: 8px; align-items: center; margin-bottom: 18px; }
+    .search-wrap { position: relative; flex: 1; }
+    .search-wrap .inp { padding-left: 38px; border-radius: 50px; }
+    .search-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--sub); font-size: 0.9rem; pointer-events: none; }
     .sort-group { display: flex; border: 1px solid var(--border); border-radius: 50px; overflow: hidden; backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); background: var(--glass); box-shadow: var(--highlight); }
-    .sort-group button { border: none; border-radius: 0; padding: 7px 16px; font-size: 0.82rem; background: transparent; color: var(--sub); font-weight: 600; cursor: pointer; font-family: inherit; transition: 0.2s; }
-    .sort-group button.active { background: rgba(42,92,230,0.75); color: #fff; border-radius: 50px; }
+    .sort-group button { border: none; padding: 7px 16px; font-size: 0.82rem; background: transparent; color: var(--sub); font-weight: 600; cursor: pointer; font-family: inherit; transition: 0.2s; }
+    .sort-group button.active { background: rgba(42,92,230,0.8); color: #fff; border-radius: 50px; }
 
     /* ── 폼 카드 ── */
-    .form-card { background: var(--glass-strong); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); border: 1px solid var(--border); border-radius: 20px; padding: 24px; margin-bottom: 24px; box-shadow: var(--highlight), var(--shadow); }
-    .form-row { display: grid; grid-template-columns: 72px 1fr 100px; gap: 8px; margin-bottom: 12px; }
+    .form-card { background: var(--glass-strong); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); border: 1px solid var(--border); border-radius: 22px; padding: 26px; margin-bottom: 22px; box-shadow: var(--highlight), var(--shadow); }
+    .form-row { display: grid; grid-template-columns: 76px 1fr 108px; gap: 8px; margin-bottom: 10px; }
     @media (max-width: 500px) { .form-row { grid-template-columns: 1fr 1fr; } .form-row > *:last-child { grid-column: span 2; } }
 
     /* ── 업로드 ── */
-    .upload-box {
-      border: 1.5px dashed var(--border-card); border-radius: var(--radius);
-      padding: 16px; text-align: center; cursor: pointer; color: var(--sub);
-      font-size: 0.85rem; transition: 0.15s; margin-bottom: 12px;
-      background: var(--glass);
-    }
+    .upload-box { border: 1.5px dashed var(--border-card); border-radius: var(--radius); padding: 15px; text-align: center; cursor: pointer; color: var(--sub); font-size: 0.85rem; transition: 0.2s; margin-bottom: 12px; background: var(--glass); }
     .upload-box:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
     .preview-container { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
     .preview-item { position: relative; width: 52px; height: 52px; }
-    .preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 7px; border: 1px solid var(--border); }
+    .preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-card); }
     .preview-item .del-btn { position: absolute; top: -5px; right: -5px; background: #ef4444; color: #fff; border: none; border-radius: 50%; width: 17px; height: 17px; font-size: 10px; cursor: pointer; line-height: 17px; }
 
-    /* ── 그리드 ── */
-    .grid-board { column-count: 3; column-gap: 16px; }
-    @media (max-width: 900px) { .grid-board { column-count: 2; } }
-    @media (max-width: 500px) { .grid-board { column-count: 1; } }
+    /* ── 그리드: 2열 ── */
+    .grid-board { column-count: 2; column-gap: 18px; }
+    @media (max-width: 600px) { .grid-board { column-count: 1; } }
 
     /* ── 포스트 카드 ── */
     .post-card {
@@ -215,74 +194,78 @@
       display: inline-block; width: 100%;
       background: var(--glass);
       backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
-      border: 1px solid var(--border-card);
-      border-radius: var(--radius); padding: 18px;
-      margin-bottom: 16px;
-      box-shadow: var(--highlight), var(--shadow);
+      border: 1px solid var(--border-card); border-radius: var(--radius); padding: 22px;
+      margin-bottom: 18px; box-shadow: var(--highlight), var(--shadow);
       transition: box-shadow 0.25s, transform 0.25s;
       opacity: 0; transform: translateY(14px);
+      position: relative;
     }
     .post-card.visible { opacity: 1; transform: translateY(0); transition: opacity 0.35s ease, transform 0.35s ease, box-shadow 0.25s; }
     .post-card:hover { box-shadow: var(--highlight), var(--shadow-md); transform: translateY(-4px); }
     .post-card.pinned-card { border-color: rgba(42,92,230,0.45); }
 
-    .pin-badge { font-size: 0.7rem; font-weight: 700; color: var(--accent); margin-bottom: 6px; display: inline-block; }
-    .teacher-card { background: var(--accent) !important; border-color: transparent !important; color: #fff !important; column-span: all; margin-bottom: 16px; box-shadow: var(--shadow-md) !important; }
-    .teacher-card * { color: #fff !important; }
-    .teacher-card .post-sub { font-size: 1rem; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.25); padding-bottom: 7px; margin-bottom: 8px; }
+    /* 핀 뱃지 */
+    .pin-badge { font-size: 0.7rem; font-weight: 700; color: var(--accent); margin-bottom: 8px; display: inline-block; letter-spacing: 0.03em; }
 
-    .post-sub { font-size: 0.98rem; font-weight: 700; margin-bottom: 6px; white-space: pre-wrap; word-break: break-all; }
-    .post-msg { font-size: 0.88rem; color: var(--sub); white-space: pre-wrap; word-break: break-all; line-height: 1.65; }
+    /* 선생님 카드: 파란 배경 → 좌측 보더 라인 */
+    .teacher-card {
+      border-left: 3px solid var(--accent) !important;
+      column-span: all; margin-bottom: 18px;
+    }
+    .teacher-card .post-sub { font-size: 0.82rem; font-weight: 700; color: var(--accent); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 6px; }
+
+    .post-sub { font-size: 1rem; font-weight: 700; margin-bottom: 6px; white-space: pre-wrap; word-break: break-all; line-height: 1.5; }
+    .post-msg { font-size: 0.9rem; color: var(--sub); white-space: pre-wrap; word-break: break-all; line-height: 1.7; }
     .post-msg a { color: var(--accent); text-decoration: underline; }
 
     /* ── 슬라이더 ── */
-    .img-slider { position: relative; margin-top: 12px; border-radius: var(--radius-sm); overflow: hidden; background: var(--bg); }
+    .img-slider { position: relative; margin-top: 14px; border-radius: var(--radius-sm); overflow: hidden; background: var(--glass); }
     .slides-track { display: flex; transition: transform 0.32s cubic-bezier(0.4,0,0.2,1); will-change: transform; }
     .slides-track img { width: 100%; flex-shrink: 0; aspect-ratio: 4/3; object-fit: cover; cursor: zoom-in; display: block; }
-    .slider-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.4); border: none; color: #fff; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
-    .slider-btn:hover { background: rgba(0,0,0,0.7); }
-    .slider-prev { left: 7px; }
-    .slider-next { right: 7px; }
+    .slider-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.35); border: none; color: #fff; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; transition: 0.15s; }
+    .slider-btn:hover { background: rgba(0,0,0,0.6); }
+    .slider-prev { left: 7px; } .slider-next { right: 7px; }
     .slider-dots { display: flex; justify-content: center; gap: 4px; padding: 7px 0 3px; }
     .s-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--sub); opacity: 0.35; cursor: pointer; transition: 0.2s; }
     .s-dot.active { opacity: 1; background: var(--accent); width: 14px; border-radius: 3px; }
 
-    /* ── 메타 ── */
-    .post-meta { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); margin-top: 12px; padding-top: 10px; flex-wrap: wrap; gap: 6px; }
+    /* ── 메타: hover 시에만 액션 표시 ── */
+    .post-meta { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-card); margin-top: 14px; padding-top: 10px; flex-wrap: wrap; gap: 6px; }
     .like-area { display: flex; align-items: center; gap: 4px; cursor: pointer; padding: 3px 8px; border-radius: 50px; font-size: 0.82rem; transition: background 0.15s; user-select: none; color: var(--sub); }
-    .like-area:hover { background: var(--bg); }
+    .like-area:hover { background: var(--glass-strong); }
     .like-area.voted { color: #ef4444; }
     @keyframes heartBeat { 0%,100% { transform: scale(1); } 30% { transform: scale(1.4); } 60% { transform: scale(1.1); } }
     .like-area.animate { animation: heartBeat 0.35s ease; }
-    .action-links { display: flex; gap: 10px; font-size: 0.8rem; }
+    .action-links { display: flex; gap: 12px; font-size: 0.8rem; opacity: 0; transition: opacity 0.2s; }
+    .post-card:hover .action-links { opacity: 1; }
     .action-links a { cursor: pointer; color: var(--sub); font-weight: 600; transition: color 0.15s; }
     .action-links a:hover { color: var(--text); }
     .action-links .del-link:hover { color: #ef4444; }
     .action-links .pin-link.is-pinned { color: var(--accent); }
-    .post-byline { font-size: 0.72rem; color: var(--sub); text-align: right; margin-top: 8px; }
+    .post-byline { font-size: 0.72rem; color: var(--sub); opacity: 0.7; text-align: right; margin-top: 8px; }
 
     /* ── 스켈레톤 ── */
-    .skeleton { background: linear-gradient(90deg, var(--border-card) 25%, rgba(255,255,255,0.3) 50%, var(--border-card) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 6px; }
+    .skeleton { background: linear-gradient(90deg, var(--border-card) 25%, rgba(255,255,255,0.4) 50%, var(--border-card) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 6px; }
     @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-    .skel-card { break-inside: avoid; display: inline-block; width: 100%; background: var(--glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); border: 1px solid var(--border-card); border-radius: var(--radius); padding: 18px; margin-bottom: 16px; }
-    .skel-line { height: 12px; margin-bottom: 8px; }
-    .skel-img { height: 120px; margin: 12px 0; border-radius: var(--radius-sm); }
+    .skel-card { break-inside: avoid; display: inline-block; width: 100%; background: var(--glass); backdrop-filter: var(--blur); border: 1px solid var(--border-card); border-radius: var(--radius); padding: 22px; margin-bottom: 18px; }
+    .skel-line { height: 13px; margin-bottom: 9px; }
+    .skel-img { height: 130px; margin: 12px 0; border-radius: var(--radius-sm); }
 
     /* ── 로딩 ── */
-    #loadingOverlay { position: fixed; inset: 0; z-index: 9000; display: none; justify-content: center; align-items: center; background: rgba(200,210,255,0.35); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    #loadingOverlay { position: fixed; inset: 0; z-index: 9000; display: none; justify-content: center; align-items: center; background: rgba(190,205,255,0.3); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
     body.dark #loadingOverlay { background: rgba(0,0,0,0.5); }
     .spinner { width: 36px; height: 36px; border-radius: 50%; border: 3px solid var(--border); border-top-color: var(--accent); animation: spin 0.75s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ── 이미지 모달 ── */
-    .img-modal { position: fixed; inset: 0; z-index: 9500; display: none; justify-content: center; align-items: center; background: rgba(0,0,0,0.9); cursor: zoom-out; }
-    .img-modal-inner { position: relative; display: flex; align-items: center; gap: 12px; }
+    .img-modal { position: fixed; inset: 0; z-index: 9500; display: none; justify-content: center; align-items: center; background: rgba(0,0,0,0.88); cursor: zoom-out; }
+    .img-modal-inner { position: relative; display: flex; align-items: center; gap: 14px; }
     .img-modal img { max-width: 88vw; max-height: 88vh; border-radius: var(--radius); display: block; cursor: default; }
     .modal-nav { background: rgba(255,255,255,0.12); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: background 0.15s; flex-shrink: 0; }
     .modal-nav:hover { background: rgba(255,255,255,0.25); }
 
     /* ── 비번 모달 ── */
-    .pw-overlay { position: fixed; inset: 0; z-index: 9000; display: none; justify-content: center; align-items: center; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
+    .pw-overlay { position: fixed; inset: 0; z-index: 9000; display: none; justify-content: center; align-items: center; background: rgba(0,0,0,0.45); backdrop-filter: blur(8px); }
     .pw-overlay.show { display: flex; }
     .pw-box { background: var(--glass-strong); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); border: 1px solid var(--border); border-radius: 20px; padding: 28px; width: 100%; max-width: 340px; box-shadow: var(--highlight), var(--shadow-md); }
     .pw-box p { font-weight: 700; margin-bottom: 14px; }
@@ -290,32 +273,57 @@
     .pw-actions { display: flex; gap: 8px; justify-content: flex-end; }
 
     /* ── 공지 팝업 ── */
-    .popup-overlay { position: fixed; inset: 0; z-index: 8000; display: none; justify-content: center; align-items: center; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
+    .popup-overlay { position: fixed; inset: 0; z-index: 8000; display: none; justify-content: center; align-items: center; background: rgba(0,0,0,0.45); backdrop-filter: blur(8px); }
     .popup-overlay.show { display: flex; }
     .popup-box { background: var(--glass-strong); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); border: 1px solid var(--border); border-radius: 22px; padding: 32px; max-width: 420px; width: 90%; box-shadow: var(--highlight), var(--shadow-md); text-align: center; }
-    .popup-box h2 { font-size: 1.1rem; font-weight: 800; margin-bottom: 12px; }
-    .popup-msg { font-size: 0.9rem; color: var(--sub); line-height: 1.7; white-space: pre-wrap; word-break: break-all; margin-bottom: 22px; }
+    .popup-box h2 { font-size: 1.05rem; font-weight: 800; margin-bottom: 12px; }
+    .popup-msg { font-size: 0.92rem; color: var(--sub); line-height: 1.75; white-space: pre-wrap; word-break: break-all; margin-bottom: 22px; }
 
     /* ── 관리자 ── */
-    .admin-panel { background: var(--glass-strong); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); border: 1px solid var(--border); border-radius: 20px; padding: 26px; margin-top: 20px; box-shadow: var(--highlight), var(--shadow); }
+    .admin-panel { background: var(--glass-strong); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); border: 1px solid var(--border); border-radius: 22px; padding: 28px; margin-top: 20px; box-shadow: var(--highlight), var(--shadow); }
     .admin-panel h2 { font-size: 1rem; font-weight: 800; margin-bottom: 20px; }
-    .edit-banner { background: var(--accent-light); border: 1px solid rgba(37,99,235,0.2); border-radius: var(--radius-sm); padding: 12px 16px; font-size: 0.88rem; font-weight: 700; color: var(--accent); margin-bottom: 14px; }
+    .edit-banner { background: var(--accent-light); border: 1px solid rgba(42,92,230,0.2); border-radius: var(--radius-sm); padding: 12px 16px; font-size: 0.88rem; font-weight: 700; color: var(--accent); margin-bottom: 14px; }
     .checkbox-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; background: var(--glass); padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-card); margin-bottom: 12px; }
-    .checkbox-grid hr { grid-column: span 3; border: none; border-top: 1px solid var(--border); }
+    .checkbox-grid hr { grid-column: span 3; border: none; border-top: 1px solid var(--border-card); }
     .checkbox-grid label { display: flex; align-items: center; gap: 6px; font-size: 0.88rem; font-weight: 600; cursor: pointer; }
     .status-pill { border-radius: 50px; padding: 4px 12px; font-weight: 700; font-size: 0.78rem; cursor: pointer; border: 1px solid; font-family: inherit; transition: 0.15s; }
-    .status-pill.on { color: var(--accent); background: var(--accent-light); border-color: rgba(37,99,235,0.3); }
+    .status-pill.on { color: var(--accent); background: var(--accent-light); border-color: rgba(42,92,230,0.3); }
     .status-pill.off { color: #ef4444; background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.25); }
     .admin-item { display: flex; justify-content: space-between; align-items: center; padding: 11px 14px; background: var(--glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); border: 1px solid var(--border-card); border-radius: var(--radius-sm); margin-bottom: 8px; flex-wrap: wrap; gap: 8px; }
-    .divider { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
+    .divider { border: none; border-top: 1px solid var(--border-card); margin: 18px 0; }
+
+    /* ── 러시아어 가상키보드 ── */
+    #ruKeyboard {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 500;
+      background: var(--glass-nav); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+      border-top: 1px solid var(--border);
+      box-shadow: 0 -4px 24px rgba(60,80,160,0.15), inset 0 1px 0 rgba(255,255,255,0.4);
+      padding: 14px 16px 20px; display: none;
+    }
+    #ruKeyboard.show { display: block; }
+    .kb-close { position: absolute; top: 10px; right: 14px; background: none; border: none; font-size: 1.1rem; cursor: pointer; color: var(--sub); line-height: 1; }
+    .kb-row { display: flex; justify-content: center; gap: 5px; margin-bottom: 5px; }
+    .kb-key {
+      font-family: 'Pretendard', sans-serif; font-size: 0.95rem; font-weight: 600;
+      min-width: 38px; height: 42px; border-radius: 9px;
+      border: 1px solid var(--border-card);
+      background: var(--glass-strong); color: var(--text);
+      backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+      box-shadow: var(--highlight), 0 2px 6px rgba(60,80,160,0.08);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, transform 0.1s;
+      user-select: none; -webkit-user-select: none;
+    }
+    .kb-key:active { transform: scale(0.93); background: var(--glass); }
+    .kb-key.wide { min-width: 72px; font-size: 0.75rem; }
+    .kb-key.space { min-width: 200px; }
+    .kb-key.shift-active { background: rgba(42,92,230,0.25); border-color: rgba(42,92,230,0.45); }
   </style>
 </head>
 <body>
 
-<!-- 로딩 -->
 <div id="loadingOverlay"><div class="spinner"></div></div>
 
-<!-- 이미지 모달 -->
 <div id="imageModal" class="img-modal" onclick="handleModalClick(event)">
   <div class="img-modal-inner" onclick="event.stopPropagation()">
     <button class="modal-nav" id="modalPrev" onclick="modalNav(-1)">‹</button>
@@ -324,7 +332,6 @@
   </div>
 </div>
 
-<!-- 비번 모달 -->
 <div id="pwOverlay" class="pw-overlay">
   <div class="pw-box">
     <p id="pwLabel">비밀번호</p>
@@ -336,7 +343,6 @@
   </div>
 </div>
 
-<!-- 공지 팝업 -->
 <div id="popupOverlay" class="popup-overlay">
   <div class="popup-box">
     <h2>공지사항</h2>
@@ -345,25 +351,31 @@
   </div>
 </div>
 
-<!-- 네비 -->
+<!-- 러시아어 가상키보드 -->
+<div id="ruKeyboard">
+  <button class="kb-close" onmousedown="event.preventDefault()" onclick="closeKeyboard()">✕</button>
+  <div id="kbRows"></div>
+</div>
+
 <nav class="nav">
   <div class="nav-left">
-    <span class="nav-logo">관산중</span>
+    <div class="nav-logo" onclick="goHome()">
+      <img src="/관산중로고.png" alt="관산중학교">
+    </div>
+  </div>
+  <div class="nav-right">
     <button class="btn lang-btn active" id="btn-ko" onclick="setLanguage('ko')">한</button>
     <button class="btn lang-btn" id="btn-zh" onclick="setLanguage('zh')">中</button>
     <button class="btn lang-btn" id="btn-ru" onclick="setLanguage('ru')">РУ</button>
-  </div>
-  <div class="nav-right">
     <button class="btn ghost" onclick="goHome()">홈</button>
     <button class="btn ghost" onclick="toggleAdmin()">관리</button>
     <button class="dark-toggle" onclick="toggleDark()" title="다크모드"></button>
   </div>
-  <button class="hamburger" onclick="toggleMobileMenu()" aria-label="메뉴">
+  <button class="hamburger" onclick="toggleMobileMenu()">
     <span></span><span></span><span></span>
   </button>
 </nav>
 
-<!-- 모바일 메뉴 -->
 <div id="mobileMenu" class="mobile-menu">
   <button class="btn ghost" onclick="goHome();closeMobileMenu()">🏠 홈</button>
   <button class="btn ghost" onclick="toggleAdmin();closeMobileMenu()">⚙️ 관리</button>
@@ -378,13 +390,11 @@
   </div>
 </div>
 
-<!-- 앱 -->
 <div id="app">
-  <!-- 스텝 1 -->
   <div id="step1">
     <div class="step1-wrap">
       <div class="select-card">
-        <h1>정보 <span>게시판</span></h1>
+        <h1>정보 게시판</h1>
         <div class="field"><label>학년</label>
           <select class="inp" id="grade" onchange="updateClassList()">
             <option>1학년</option><option>2학년</option><option>3학년</option>
@@ -403,28 +413,24 @@
     </div>
   </div>
 
-  <!-- 스텝 2 -->
   <div id="step2" class="wrap hidden">
     <div class="board-header">
       <div>
         <div id="boardTitle" class="board-title"></div>
         <div id="boardDesc" class="board-desc"></div>
       </div>
-      <div class="header-actions">
-        <button class="btn" onclick="manualRefresh()">새로고침</button>
-      </div>
+      <button class="btn" onclick="manualRefresh()">새로고침</button>
     </div>
 
-    <!-- 작성 폼 -->
     <div class="form-card">
       <form id="postForm" onsubmit="submitPost(event)">
         <div class="form-row">
-          <input class="inp" id="p_num" placeholder="번호" required>
-          <input class="inp" id="p_name" placeholder="이름" required>
+          <input class="inp ru-target" id="p_num" placeholder="번호" required>
+          <input class="inp ru-target" id="p_name" placeholder="이름" required>
           <input class="inp" id="p_pw_display" type="password" placeholder="비번" required>
         </div>
-        <input class="inp" id="p_sub" placeholder="제목" required style="margin-bottom:8px;">
-        <textarea class="inp" id="p_msg" rows="4" placeholder="내용" required style="margin-bottom:10px;"></textarea>
+        <input class="inp ru-target" id="p_sub" placeholder="제목" required style="margin-bottom:8px;">
+        <textarea class="inp ru-target" id="p_msg" rows="4" placeholder="내용" required style="margin-bottom:10px;"></textarea>
         <div class="upload-box" id="ui-upload-label" onclick="document.getElementById('fileInput').click()">
           이미지 첨부 (클릭 또는 Ctrl+V, 최대 4장)
           <div id="previewArea" class="preview-container"></div>
@@ -435,7 +441,6 @@
       </form>
     </div>
 
-    <!-- 툴바 -->
     <div class="toolbar">
       <div class="search-wrap">
         <span class="search-icon">🔍</span>
@@ -448,13 +453,11 @@
     </div>
 
     <div id="display" class="grid-board"></div>
-
     <div style="text-align:center;margin-top:32px;">
       <button class="btn ghost" onclick="goHome()">← 처음으로</button>
     </div>
   </div>
 
-  <!-- 관리자 -->
   <div id="adminPanel" class="wrap hidden" style="padding-top:0;">
     <div class="admin-panel">
       <h2>수업 관리</h2>
@@ -462,7 +465,6 @@
       <input type="hidden" id="adm_row">
       <input type="hidden" id="adm_grade_hidden">
       <input type="hidden" id="adm_group_hidden">
-
       <div class="checkbox-grid" id="adm_target_area">
         <label><input type="checkbox" class="adm-g" value="1학년"> 1학년</label>
         <label><input type="checkbox" class="adm-g" value="2학년"> 2학년</label>
@@ -478,7 +480,6 @@
       <div class="field"><label>설명</label><textarea class="inp" id="adm_desc" rows="2" placeholder="수업 상세 설명"></textarea></div>
       <div class="field"><label>선생님 안내</label><textarea class="inp" id="adm_ex" rows="2" placeholder="게시판 최상단 고정 안내"></textarea></div>
       <div class="field" style="margin-bottom:18px;"><label>공지 팝업</label><textarea class="inp" id="adm_popup" rows="2" placeholder="입장 시 팝업 (비워두면 미표시)"></textarea></div>
-
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;">
         <button class="btn accent" onclick="saveAdminClass()">저장</button>
         <button id="adm_cancel_btn" class="btn hidden" onclick="resetAdminForm()">취소</button>
@@ -502,9 +503,9 @@
   const MASTER_PW = "9600";
 
   const uiText = {
-    ko: { opt:"수업을 선택하세요", enter:"입장하기", submit:"게시물 등록", edit_finish:"수정 완료", loading:"불러오는 중..." },
-    zh: { opt:"请选择课程", enter:"进入", submit:"发布", edit_finish:"完成修改", loading:"加载中..." },
-    ru: { opt:"Выберите урок", enter:"Войти", submit:"Опубликовать", edit_finish:"Изм.завершено", loading:"Загрузка..." }
+    ko: { opt:"수업을 선택하세요", enter:"입장하기", submit:"게시물 등록", edit_finish:"수정 완료" },
+    zh: { opt:"请选择课程", enter:"进入", submit:"发布", edit_finish:"完成修改" },
+    ru: { opt:"Выберите урок", enter:"Войти", submit:"Опубликовать", edit_finish:"Изм.завершено" }
   };
 
   // ── API ──
@@ -513,6 +514,83 @@
     const json = await res.json();
     if (!json.ok) throw new Error(json.error || '서버 오류');
     return json.result;
+  }
+
+  // ── 러시아어 가상키보드 ──
+  const RU_ROWS = [
+    ['й','ц','у','к','е','н','г','ш','щ','з','х','ъ'],
+    ['ф','ы','в','а','п','р','о','л','д','ж','э'],
+    ['shift','я','ч','с','м','и','т','ь','б','ю','⌫'],
+    ['space','enter'],
+  ];
+  let kbShift = false;
+  let kbTarget = null;
+
+  function buildKeyboard() {
+    const wrap = document.getElementById('kbRows');
+    wrap.innerHTML = RU_ROWS.map(row => {
+      const keys = row.map(k => {
+        if (k === 'shift') return `<button class="kb-key wide" id="kb-shift" onmousedown="event.preventDefault()" onclick="toggleShift()">⇧ Shift</button>`;
+        if (k === '⌫')    return `<button class="kb-key wide" onmousedown="event.preventDefault()" onclick="kbBackspace()">⌫</button>`;
+        if (k === 'space') return `<button class="kb-key space" onmousedown="event.preventDefault()" onclick="kbInsert(' ')">Space</button>`;
+        if (k === 'enter') return `<button class="kb-key wide" onmousedown="event.preventDefault()" onclick="kbInsert('\\n')">↵</button>`;
+        return `<button class="kb-key" onmousedown="event.preventDefault()" onclick="kbInsert('${k}')">${k}</button>`;
+      }).join('');
+      return `<div class="kb-row">${keys}</div>`;
+    }).join('');
+  }
+
+  function toggleShift() {
+    kbShift = !kbShift;
+    document.getElementById('kb-shift')?.classList.toggle('shift-active', kbShift);
+    document.querySelectorAll('.kb-key:not(.wide)').forEach(btn => {
+      const ch = btn.innerText;
+      if (ch.length === 1) btn.innerText = kbShift ? ch.toUpperCase() : ch.toLowerCase();
+    });
+  }
+
+  function kbInsert(ch) {
+    if (!kbTarget) return;
+    const val = kbShift && ch.length === 1 ? ch.toUpperCase() : ch;
+    const start = kbTarget.selectionStart;
+    const end = kbTarget.selectionEnd;
+    kbTarget.value = kbTarget.value.slice(0, start) + val + kbTarget.value.slice(end);
+    kbTarget.selectionStart = kbTarget.selectionEnd = start + val.length;
+    kbTarget.dispatchEvent(new Event('input'));
+    if (kbShift && ch.length === 1) toggleShift();
+  }
+
+  function kbBackspace() {
+    if (!kbTarget) return;
+    const start = kbTarget.selectionStart;
+    const end = kbTarget.selectionEnd;
+    if (start === end && start > 0) {
+      kbTarget.value = kbTarget.value.slice(0, start - 1) + kbTarget.value.slice(start);
+      kbTarget.selectionStart = kbTarget.selectionEnd = start - 1;
+    } else if (start !== end) {
+      kbTarget.value = kbTarget.value.slice(0, start) + kbTarget.value.slice(end);
+      kbTarget.selectionStart = kbTarget.selectionEnd = start;
+    }
+    kbTarget.dispatchEvent(new Event('input'));
+  }
+
+  function openKeyboard(el) {
+    if (window.innerWidth < 768) return; // 모바일은 시스템 키보드 사용
+    kbTarget = el;
+    document.getElementById('ruKeyboard').classList.add('show');
+    document.getElementById('step2').style.paddingBottom = '200px';
+  }
+
+  function closeKeyboard() {
+    document.getElementById('ruKeyboard').classList.remove('show');
+    document.getElementById('step2').style.paddingBottom = '';
+    kbTarget = null;
+  }
+
+  function bindKeyboardTargets() {
+    document.querySelectorAll('.ru-target').forEach(el => {
+      el.addEventListener('focus', () => { if (currentLang === 'ru') openKeyboard(el); });
+    });
   }
 
   // ── 비번 모달 ──
@@ -525,15 +603,8 @@
       setTimeout(() => document.getElementById('pwInput').focus(), 100);
     });
   }
-  function pwConfirm() {
-    const v = document.getElementById('pwInput').value;
-    document.getElementById('pwOverlay').classList.remove('show');
-    if (pwResolveCallback) { pwResolveCallback(v); pwResolveCallback = null; }
-  }
-  function pwCancel() {
-    document.getElementById('pwOverlay').classList.remove('show');
-    if (pwResolveCallback) { pwResolveCallback(null); pwResolveCallback = null; }
-  }
+  function pwConfirm() { const v = document.getElementById('pwInput').value; document.getElementById('pwOverlay').classList.remove('show'); if (pwResolveCallback) { pwResolveCallback(v); pwResolveCallback = null; } }
+  function pwCancel() { document.getElementById('pwOverlay').classList.remove('show'); if (pwResolveCallback) { pwResolveCallback(null); pwResolveCallback = null; } }
 
   // ── 다크모드 ──
   function toggleDark() { document.body.classList.toggle('dark'); localStorage.setItem('dark', document.body.classList.contains('dark') ? '1' : '0'); }
@@ -547,90 +618,45 @@
   function toggleLoading(show) { document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none'; }
 
   // ── 이미지 모달 ──
-  function openModal(imgs, idx) {
-    modalImgList = imgs; modalImgIndex = idx;
-    document.getElementById('modalImg').src = imgs[idx];
-    document.getElementById('modalPrev').style.display = imgs.length > 1 ? 'flex' : 'none';
-    document.getElementById('modalNext').style.display = imgs.length > 1 ? 'flex' : 'none';
-    document.getElementById('imageModal').style.display = 'flex';
-  }
+  function openModal(imgs, idx) { modalImgList = imgs; modalImgIndex = idx; document.getElementById('modalImg').src = imgs[idx]; document.getElementById('modalPrev').style.display = imgs.length > 1 ? 'flex' : 'none'; document.getElementById('modalNext').style.display = imgs.length > 1 ? 'flex' : 'none'; document.getElementById('imageModal').style.display = 'flex'; }
   function handleModalClick(e) { if (e.target === document.getElementById('imageModal')) closeModal(); }
   function closeModal() { document.getElementById('imageModal').style.display = 'none'; }
-  function modalNav(dir) {
-    modalImgIndex = (modalImgIndex + dir + modalImgList.length) % modalImgList.length;
-    document.getElementById('modalImg').src = modalImgList[modalImgIndex];
-  }
+  function modalNav(dir) { modalImgIndex = (modalImgIndex + dir + modalImgList.length) % modalImgList.length; document.getElementById('modalImg').src = modalImgList[modalImgIndex]; }
   document.addEventListener('keydown', e => {
-    if (document.getElementById('imageModal').style.display === 'flex') {
-      if (e.key === 'ArrowLeft') modalNav(-1);
-      if (e.key === 'ArrowRight') modalNav(1);
-      if (e.key === 'Escape') closeModal();
-    }
+    if (document.getElementById('imageModal').style.display === 'flex') { if (e.key === 'ArrowLeft') modalNav(-1); if (e.key === 'ArrowRight') modalNav(1); if (e.key === 'Escape') closeModal(); }
     if (document.getElementById('pwOverlay').classList.contains('show') && e.key === 'Escape') pwCancel();
   });
 
   // ── 공지 팝업 ──
-  function showPopup(msg) {
-    if (!msg) return;
-    const key = 'popup_' + document.getElementById('f_class').value;
-    if (sessionStorage.getItem(key)) return;
-    sessionStorage.setItem(key, '1');
-    document.getElementById('popupMsg').innerText = msg;
-    document.getElementById('popupOverlay').classList.add('show');
-  }
+  function showPopup(msg) { if (!msg) return; const key = 'popup_' + getHidden('f_class'); if (sessionStorage.getItem(key)) return; sessionStorage.setItem(key, '1'); document.getElementById('popupMsg').innerText = msg; document.getElementById('popupOverlay').classList.add('show'); }
   function closePopup() { document.getElementById('popupOverlay').classList.remove('show'); }
 
   // ── 포맷 ──
-  function fmtMsg(text) {
-    if (!text) return '';
-    let s = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    return s.replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
-  }
+  function fmtMsg(text) { if (!text) return ''; let s = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); return s.replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'); }
 
   // ── 언어 ──
   function setLanguage(lang) {
     const refreshing = !document.getElementById('step2').classList.contains('hidden');
     currentLang = lang;
-    ['ko','zh','ru'].forEach(l => {
-      document.getElementById('btn-'+l)?.classList.toggle('active', l===lang);
-      document.getElementById('m-btn-'+l)?.classList.toggle('active', l===lang);
-    });
+    ['ko','zh','ru'].forEach(l => { document.getElementById('btn-'+l)?.classList.toggle('active',l===lang); document.getElementById('m-btn-'+l)?.classList.toggle('active',l===lang); });
     document.getElementById('ui-enter-btn').innerText = uiText[lang].enter;
-    document.getElementById('subBtn').innerText = document.getElementById('f_mode')?.value === 'edit' ? uiText[lang].edit_finish : uiText[lang].submit;
+    document.getElementById('subBtn').innerText = getHidden('f_mode') === 'edit' ? uiText[lang].edit_finish : uiText[lang].submit;
+    if (lang !== 'ru') closeKeyboard();
     updateClassList();
     if (refreshing) manualRefresh();
   }
 
-  // ── 숨겨진 폼 필드 ──
-  function getHidden(id) { let el = document.getElementById(id); return el ? el.value : ''; }
+  function getHidden(id) { const el = document.getElementById(id); return el ? el.value : ''; }
   function setHidden(id, val) { let el = document.getElementById(id); if (!el) { el = document.createElement('input'); el.type='hidden'; el.id=id; document.body.appendChild(el); } el.value = val; }
 
   function updateClassList() {
     callApi('getInitData', { grade: document.getElementById('grade').value, group: document.getElementById('group').value })
-      .then(data => {
-        const sel = document.getElementById('classList');
-        sel.innerHTML = `<option>${uiText[currentLang].opt}</option>`;
-        (data.classList||[]).forEach(c => sel.innerHTML += `<option>${c.name}</option>`);
-      }).catch(()=>{});
+      .then(data => { const sel = document.getElementById('classList'); sel.innerHTML = `<option>${uiText[currentLang].opt}</option>`; (data.classList||[]).forEach(c => sel.innerHTML += `<option>${c.name}</option>`); }).catch(()=>{});
   }
 
-  function goHome() {
-    document.getElementById('step2').classList.add('hidden');
-    document.getElementById('step1').classList.remove('hidden');
-    document.getElementById('adminPanel').classList.add('hidden');
-    cancelEdit(); window.scrollTo(0,0);
-  }
+  function goHome() { document.getElementById('step2').classList.add('hidden'); document.getElementById('step1').classList.remove('hidden'); document.getElementById('adminPanel').classList.add('hidden'); cancelEdit(); closeKeyboard(); window.scrollTo(0,0); }
 
-  function toggleAdmin() {
-    askPassword('관리자 비밀번호').then(pw => {
-      if (pw !== MASTER_PW) return;
-      document.getElementById('adminPanel').classList.toggle('hidden');
-      if (!document.getElementById('adminPanel').classList.contains('hidden')) {
-        loadAdminList();
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-      }
-    });
-  }
+  function toggleAdmin() { askPassword('관리자 비밀번호').then(pw => { if (pw !== MASTER_PW) return; document.getElementById('adminPanel').classList.toggle('hidden'); if (!document.getElementById('adminPanel').classList.contains('hidden')) { loadAdminList(); window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); } }); }
 
   function startBoard() {
     const cls = document.getElementById('classList').value;
@@ -645,62 +671,31 @@
   }
 
   function showSkeleton() {
-    document.getElementById('display').innerHTML = Array(6).fill(`
-      <div class="skel-card">
-        <div class="skeleton skel-line" style="width:60%;"></div>
-        <div class="skeleton skel-line" style="width:90%;margin-bottom:4px;"></div>
-        <div class="skeleton skel-line" style="width:75%;"></div>
-        <div class="skeleton skel-img"></div>
-      </div>`).join('');
+    document.getElementById('display').innerHTML = Array(4).fill(`<div class="skel-card"><div class="skeleton skel-line" style="width:55%;"></div><div class="skeleton skel-line" style="width:85%;"></div><div class="skeleton skel-line" style="width:70%;"></div><div class="skeleton skel-img"></div></div>`).join('');
   }
 
   function manualRefresh() {
     showSkeleton();
     callApi('getPosts', { classTitle:getHidden('f_class'), grade:getHidden('f_grade'), group:getHidden('f_group'), targetLang:currentLang })
-      .then(data => {
-        document.getElementById('boardTitle').innerText = data.title;
-        document.getElementById('boardDesc').innerText = data.desc;
-        currentPosts = data.posts; currentExample = data.example;
-        render(data.example, sortedPosts());
-        if (data.popup) showPopup(data.popup);
-      }).catch(()=>{ document.getElementById('display').innerHTML = ''; });
+      .then(data => { document.getElementById('boardTitle').innerText = data.title; document.getElementById('boardDesc').innerText = data.desc; currentPosts = data.posts; currentExample = data.example; render(data.example, sortedPosts()); if (data.popup) showPopup(data.popup); })
+      .catch(() => { document.getElementById('display').innerHTML = ''; });
   }
 
-  // ── 정렬 ──
-  function setSort(type) {
-    currentSort = type;
-    document.getElementById('sortNew').classList.toggle('active', type==='new');
-    document.getElementById('sortLike').classList.toggle('active', type==='like');
-    render(currentExample, sortedPosts());
-  }
-  function sortedPosts() {
-    const p = [...currentPosts];
-    if (currentSort === 'like') p.sort((a,b) => (b.pinned?1:0)-(a.pinned?1:0) || b.likes-a.likes);
-    // 기본은 서버에서 내려온 순서(최신+핀 우선) 유지
-    return p;
-  }
+  function setSort(type) { currentSort = type; document.getElementById('sortNew').classList.toggle('active', type==='new'); document.getElementById('sortLike').classList.toggle('active', type==='like'); render(currentExample, sortedPosts()); }
+  function sortedPosts() { const p = [...currentPosts]; if (currentSort === 'like') p.sort((a,b) => (b.pinned?1:0)-(a.pinned?1:0) || b.likes-a.likes); return p; }
+  function filterPosts() { const q = document.getElementById('searchInput').value.trim().toLowerCase(); if (!q) { render(currentExample, sortedPosts()); return; } const f = sortedPosts().filter(p => (p.subject||'').toLowerCase().includes(q)||(p.message||'').toLowerCase().includes(q)||(p.name||'').toLowerCase().includes(q)); render(currentExample, f, true); }
 
-  // ── 검색 ──
-  function filterPosts() {
-    const q = document.getElementById('searchInput').value.trim().toLowerCase();
-    if (!q) { render(currentExample, sortedPosts()); return; }
-    const filtered = sortedPosts().filter(p => (p.subject||'').toLowerCase().includes(q) || (p.message||'').toLowerCase().includes(q) || (p.name||'').toLowerCase().includes(q));
-    render(currentExample, filtered, true);
-  }
-
-  // ── 렌더 ──
   function render(ex, posts, isFiltered) {
     const display = document.getElementById('display');
     let html = '';
     if (ex && !isFiltered) {
-      html += `<div class="post-card teacher-card visible"><div class="post-sub">📌 선생님 안내</div><div class="post-msg">${fmtMsg(ex)}</div></div>`;
+      html += `<div class="post-card teacher-card visible"><div class="post-sub">선생님 안내</div><div class="post-msg">${fmtMsg(ex)}</div></div>`;
     }
-    if (!posts.length) { display.innerHTML = html + `<div style="text-align:center;padding:40px 0;color:var(--sub);font-size:0.9rem;">게시물이 없습니다.</div>`; return; }
-
-    const colCount = window.innerWidth > 900 ? 3 : window.innerWidth > 500 ? 2 : 1;
+    if (!posts.length) { display.innerHTML = html + `<div style="text-align:center;padding:48px 0;color:var(--sub);font-size:0.92rem;">게시물이 없습니다.</div>`; return; }
+    const colCount = window.innerWidth > 600 ? 2 : 1;
     const cols = Array.from({length:colCount}, ()=>[]);
     posts.forEach((p,i) => cols[i%colCount].push(p));
-    cols.flat().forEach((p,i) => {
+    cols.flat().forEach((p) => {
       const hasLiked = localStorage.getItem('voted_'+p.id);
       html += `<div class="post-card ${p.pinned?'pinned-card':''}" data-id="${p.id}">
         ${p.pinned ? '<div class="pin-badge">📌 고정</div>' : ''}
@@ -721,230 +716,54 @@
       </div>`;
     });
     display.innerHTML = html;
-
-    const obs = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
-    }, { threshold: 0.05 });
+    const obs = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } }); }, { threshold: 0.05 });
     display.querySelectorAll('.post-card:not(.teacher-card):not(.visible)').forEach(c => obs.observe(c));
   }
 
-  // ── 슬라이더 ──
   function buildSlider(imgs, pid) {
     if (!imgs||!imgs.length) return '';
     if (imgs.length===1) return `<div class="img-slider"><div class="slides-track"><img src="${imgs[0]}" onclick="openModal(['${imgs[0]}'],0)" loading="lazy"></div></div>`;
-    const slides = imgs.map((s,i) => `<img src="${s}" onclick="openModal(${JSON.stringify(imgs)},${i})" loading="lazy">`).join('');
-    const dots = imgs.map((_,i) => `<span class="s-dot ${i===0?'active':''}" onclick="slideTo('${pid}',${i})"></span>`).join('');
-    return `<div class="img-slider" id="slider_${pid}">
-      <div class="slides-track" id="track_${pid}">${slides}</div>
-      <button class="slider-btn slider-prev" onclick="slidePrev('${pid}',${imgs.length})">‹</button>
-      <button class="slider-btn slider-next" onclick="slideNext('${pid}',${imgs.length})">›</button>
-      <div class="slider-dots">${dots}</div>
-    </div>`;
+    const slides = imgs.map((s,i)=>`<img src="${s}" onclick="openModal(${JSON.stringify(imgs)},${i})" loading="lazy">`).join('');
+    const dots = imgs.map((_,i)=>`<span class="s-dot ${i===0?'active':''}" onclick="slideTo('${pid}',${i})"></span>`).join('');
+    return `<div class="img-slider" id="slider_${pid}"><div class="slides-track" id="track_${pid}">${slides}</div><button class="slider-btn slider-prev" onclick="slidePrev('${pid}',${imgs.length})">‹</button><button class="slider-btn slider-next" onclick="slideNext('${pid}',${imgs.length})">›</button><div class="slider-dots">${dots}</div></div>`;
   }
 
   const sliderIdx = {};
-  function slideTo(id,idx) {
-    sliderIdx[id]=idx;
-    const t=document.getElementById('track_'+id); if(!t)return;
-    t.style.transform=`translateX(-${idx*100}%)`;
-    document.querySelectorAll(`#slider_${id} .s-dot`).forEach((d,i)=>d.classList.toggle('active',i===idx));
-  }
+  function slideTo(id,idx) { sliderIdx[id]=idx; const t=document.getElementById('track_'+id); if(!t)return; t.style.transform=`translateX(-${idx*100}%)`; document.querySelectorAll(`#slider_${id} .s-dot`).forEach((d,i)=>d.classList.toggle('active',i===idx)); }
   function slideNext(id,len){slideTo(id,((sliderIdx[id]||0)+1)%len);}
   function slidePrev(id,len){slideTo(id,((sliderIdx[id]||0)-1+len)%len);}
 
-  // 터치 스와이프
   let touchX = null;
   document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, {passive:true});
-  document.addEventListener('touchend', e => {
-    if (touchX === null) return;
-    const dx = e.changedTouches[0].clientX - touchX;
-    if (Math.abs(dx) < 40) { touchX=null; return; }
-    const slider = e.target.closest('.img-slider');
-    if (!slider) { touchX=null; return; }
-    const id = slider.id.replace('slider_','');
-    const track = document.getElementById('track_'+id);
-    if (!track) { touchX=null; return; }
-    const len = track.children.length;
-    dx < 0 ? slideNext(id,len) : slidePrev(id,len);
-    touchX = null;
-  }, {passive:true});
+  document.addEventListener('touchend', e => { if (touchX===null)return; const dx=e.changedTouches[0].clientX-touchX; if(Math.abs(dx)<40){touchX=null;return;} const slider=e.target.closest('.img-slider'); if(!slider){touchX=null;return;} const id=slider.id.replace('slider_',''); const track=document.getElementById('track_'+id); if(!track){touchX=null;return;} const len=track.children.length; dx<0?slideNext(id,len):slidePrev(id,len); touchX=null; }, {passive:true});
 
-  // ── 좋아요 ──
-  function toggleLikeUI(id, el) {
-    const hasLiked = localStorage.getItem('voted_'+id);
-    const cnt = el.querySelector('.like-count');
-    let cur = parseInt(cnt.innerText);
-    el.classList.add('animate'); setTimeout(()=>el.classList.remove('animate'),350);
-    if (hasLiked) { cnt.innerText=Math.max(0,cur-1); el.classList.remove('voted'); localStorage.removeItem('voted_'+id); callApi('toggleLike',{postId:id,isCancel:true}).catch(()=>{}); }
-    else { cnt.innerText=cur+1; el.classList.add('voted'); localStorage.setItem('voted_'+id,'1'); callApi('toggleLike',{postId:id,isCancel:false}).catch(()=>{}); }
-  }
+  function toggleLikeUI(id,el) { const hasLiked=localStorage.getItem('voted_'+id); const cnt=el.querySelector('.like-count'); let cur=parseInt(cnt.innerText); el.classList.add('animate'); setTimeout(()=>el.classList.remove('animate'),350); if(hasLiked){cnt.innerText=Math.max(0,cur-1);el.classList.remove('voted');localStorage.removeItem('voted_'+id);callApi('toggleLike',{postId:id,isCancel:true}).catch(()=>{});}else{cnt.innerText=cur+1;el.classList.add('voted');localStorage.setItem('voted_'+id,'1');callApi('toggleLike',{postId:id,isCancel:false}).catch(()=>{});} }
 
-  // ── 핀 ──
-  async function handlePinClick(postId) {
-    const pw = await askPassword('관리자 비밀번호');
-    if (pw !== MASTER_PW) return;
-    const post = currentPosts.find(p=>p.id===postId); if (!post) return;
-    const isPinned = !post.pinned;
-    callApi('togglePin',{pw:MASTER_PW,postId,isPinned}).then(()=>{
-      post.pinned=isPinned; render(currentExample, sortedPosts());
-    }).catch(err=>alert(err.message));
-  }
+  async function handlePinClick(postId) { const pw=await askPassword('관리자 비밀번호'); if(pw!==MASTER_PW)return; const post=currentPosts.find(p=>p.id===postId); if(!post)return; const isPinned=!post.pinned; callApi('togglePin',{pw:MASTER_PW,postId,isPinned}).then(()=>{post.pinned=isPinned;render(currentExample,sortedPosts());}).catch(err=>alert(err.message)); }
 
-  // ── 이미지 처리 ──
-  function handleFiles(files) {
-    Array.from(files).forEach(file=>{
-      if(imgList.length>=4)return;
-      const r=new FileReader();
-      r.onload=e=>{
-        const img=new Image();
-        img.onload=()=>{
-          const c=document.createElement('canvas');
-          const max=500; let w=img.width,h=img.height;
-          if(w>max||h>max){if(w>h){h*=max/w;w=max;}else{w*=max/h;h=max;}}
-          c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
-          imgList.push(c.toDataURL('image/jpeg',0.6)); updatePreview();
-        };
-        img.src=e.target.result;
-      };
-      r.readAsDataURL(file);
-    });
-  }
+  function handleFiles(files) { Array.from(files).forEach(file=>{if(imgList.length>=4)return;const r=new FileReader();r.onload=e=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');const max=500;let w=img.width,h=img.height;if(w>max||h>max){if(w>h){h*=max/w;w=max;}else{w*=max/h;h=max;}}c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);imgList.push(c.toDataURL('image/jpeg',0.6));updatePreview();};img.src=e.target.result;};r.readAsDataURL(file);}); }
   function updatePreview(){document.getElementById('previewArea').innerHTML=imgList.map((s,i)=>`<div class="preview-item"><img src="${s}"><button type="button" class="del-btn" onclick="removeImg(${i})">×</button></div>`).join('');}
   function removeImg(i){imgList.splice(i,1);updatePreview();}
-  window.addEventListener('paste',e=>{
-    if(document.getElementById('step2').classList.contains('hidden'))return;
-    const items=(e.clipboardData||e.originalEvent.clipboardData).items;
-    for(let item of items){if(item.type.startsWith('image/'))handleFiles([item.getAsFile()]);}
-  });
+  window.addEventListener('paste',e=>{if(document.getElementById('step2').classList.contains('hidden'))return;const items=(e.clipboardData||e.originalEvent.clipboardData).items;for(let item of items){if(item.type.startsWith('image/'))handleFiles([item.getAsFile()]);}});
 
-  // ── 폼 제출 ──
   async function submitPost(event) {
-    event.preventDefault();
-    toggleLoading(true);
-    document.getElementById('subBtn').disabled=true;
-    const params={
-      mode:getHidden('f_mode'), postId:getHidden('f_postId'), targetLang:currentLang,
-      grade:getHidden('f_grade'), group:getHidden('f_group'), classTitle:getHidden('f_class'),
-      num:document.getElementById('p_num').value,
-      name:document.getElementById('p_name').value,
-      password:document.getElementById('p_pw_display').value,
-      subject:document.getElementById('p_sub').value,
-      message:document.getElementById('p_msg').value,
-      combinedImageData:imgList.join('|'),
-    };
-    callApi('processForm',params).then(data=>{
-      currentPosts=data.posts; currentExample=data.example;
-      render(data.example,sortedPosts());
-      document.getElementById('postForm').reset();
-      cancelEdit(); toggleLoading(false);
-      // 새 카드로 스크롤
-      setTimeout(()=>{ const first=document.querySelector('.grid-board .post-card:not(.teacher-card)'); if(first)first.scrollIntoView({behavior:'smooth',block:'center'}); },150);
-    }).catch(err=>{ alert(err.message); document.getElementById('subBtn').disabled=false; toggleLoading(false); });
+    event.preventDefault(); toggleLoading(true); document.getElementById('subBtn').disabled=true;
+    const params={mode:getHidden('f_mode'),postId:getHidden('f_postId'),targetLang:currentLang,grade:getHidden('f_grade'),group:getHidden('f_group'),classTitle:getHidden('f_class'),num:document.getElementById('p_num').value,name:document.getElementById('p_name').value,password:document.getElementById('p_pw_display').value,subject:document.getElementById('p_sub').value,message:document.getElementById('p_msg').value,combinedImageData:imgList.join('|')};
+    callApi('processForm',params).then(data=>{currentPosts=data.posts;currentExample=data.example;render(data.example,sortedPosts());document.getElementById('postForm').reset();cancelEdit();toggleLoading(false);setTimeout(()=>{const first=document.querySelector('.grid-board .post-card:not(.teacher-card)');if(first)first.scrollIntoView({behavior:'smooth',block:'center'});},150);}).catch(err=>{alert(err.message);document.getElementById('subBtn').disabled=false;toggleLoading(false);});
   }
 
-  async function handleEditClick(postId) {
-    const post=currentPosts.find(p=>p.id===postId); if(!post)return;
-    const pw=await askPassword('비밀번호'); if(!pw)return;
-    setHidden('f_mode','edit'); setHidden('f_postId',post.id);
-    document.getElementById('p_name').value=post.name;
-    document.getElementById('p_num').value=post.num;
-    document.getElementById('p_sub').value=post.origSub;
-    document.getElementById('p_msg').value=post.origMsg;
-    document.getElementById('p_pw_display').value=pw;
-    imgList=post.origImgs?post.origImgs.split('|'):[]; updatePreview();
-    document.getElementById('subBtn').innerText=uiText[currentLang].edit_finish;
-    document.getElementById('cancelEditBtn').classList.remove('hidden');
-    document.querySelector('.form-card').scrollIntoView({behavior:'smooth',block:'start'});
-  }
+  async function handleEditClick(postId) { const post=currentPosts.find(p=>p.id===postId);if(!post)return;const pw=await askPassword('비밀번호');if(!pw)return;setHidden('f_mode','edit');setHidden('f_postId',post.id);document.getElementById('p_name').value=post.name;document.getElementById('p_num').value=post.num;document.getElementById('p_sub').value=post.origSub;document.getElementById('p_msg').value=post.origMsg;document.getElementById('p_pw_display').value=pw;imgList=post.origImgs?post.origImgs.split('|'):[];updatePreview();document.getElementById('subBtn').innerText=uiText[currentLang].edit_finish;document.getElementById('cancelEditBtn').classList.remove('hidden');document.querySelector('.form-card').scrollIntoView({behavior:'smooth',block:'start'}); }
+  function cancelEdit(){document.getElementById('postForm').reset();setHidden('f_mode','add');setHidden('f_postId','');imgList=[];updatePreview();document.getElementById('subBtn').innerText=uiText[currentLang].submit;document.getElementById('subBtn').disabled=false;document.getElementById('cancelEditBtn').classList.add('hidden');}
+  async function openDelete(id){const pw=await askPassword('비밀번호');if(!pw)return;toggleLoading(true);callApi('processForm',{mode:'delete',postId:id,password:pw,classTitle:getHidden('f_class'),grade:getHidden('f_grade'),group:getHidden('f_group'),targetLang:currentLang}).then(data=>{currentPosts=data.posts;currentExample=data.example;render(data.example,sortedPosts());toggleLoading(false);}).catch(err=>{alert(err.message);toggleLoading(false);});}
 
-  function cancelEdit(){
-    document.getElementById('postForm').reset();
-    setHidden('f_mode','add'); setHidden('f_postId','');
-    imgList=[]; updatePreview();
-    document.getElementById('subBtn').innerText=uiText[currentLang].submit;
-    document.getElementById('subBtn').disabled=false;
-    document.getElementById('cancelEditBtn').classList.add('hidden');
-  }
+  function loadAdminList(){callApi('getSettingsList',{pw:MASTER_PW}).then(list=>{document.getElementById('adminList').innerHTML=list.map(c=>`<div class="admin-item"><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;"><select onchange="toggleClassStatus(${c.row},this.value)" class="status-pill ${c.status==='ON'?'on':'off'}"><option value="ON" ${c.status==='ON'?'selected':''}>ON</option><option value="OFF" ${c.status==='OFF'?'selected':''}>OFF</option></select><span style="font-size:0.88rem;">${c.grade} ${c.group} — <b>${c.name}</b></span></div><div style="display:flex;gap:12px;"><a onclick='editAdminUI(${JSON.stringify(c)})' style="font-size:0.82rem;font-weight:700;color:var(--accent);cursor:pointer;">수정</a><a onclick="delAdminClass(${c.row})" style="font-size:0.82rem;font-weight:700;color:#ef4444;cursor:pointer;">삭제</a></div></div>`).join('');}).catch(()=>{});}
+  function toggleClassStatus(row,status){toggleLoading(true);callApi('updateClassStatus',{pw:MASTER_PW,row,newStatus:status}).then(()=>{loadAdminList();updateClassList();toggleLoading(false);}).catch(()=>toggleLoading(false));}
+  function editAdminUI(c){document.getElementById('adm_row').value=c.row;document.getElementById('adm_grade_hidden').value=c.grade;document.getElementById('adm_group_hidden').value=c.group;document.getElementById('adm_name').value=c.name;document.getElementById('adm_desc').value=c.desc;document.getElementById('adm_ex').value=c.ex;document.getElementById('adm_popup').value=c.popup||'';document.getElementById('adm_target_area').classList.add('hidden');const info=document.getElementById('adm_edit_info');info.classList.remove('hidden');info.innerText=`수정 중: [${c.grade} ${c.group}] ${c.name}`;document.getElementById('adm_cancel_btn').classList.remove('hidden');window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});}
+  function saveAdminClass(){const rowId=document.getElementById('adm_row').value;let targets=[],sG='',sGr='';if(rowId){sG=document.getElementById('adm_grade_hidden').value;sGr=document.getElementById('adm_group_hidden').value;}else{const gL=[...document.querySelectorAll('.adm-g:checked')].map(i=>i.value);const bL=[...document.querySelectorAll('.adm-b:checked')].map(i=>i.value);if(!gL.length||!bL.length){alert('학년과 반을 각각 최소 하나씩 선택해주세요.');return;}gL.forEach(g=>bL.forEach(b=>targets.push({grade:g,group:b})));}toggleLoading(true);callApi('addClass',{adminPw:MASTER_PW,classInfo:{row:rowId,name:document.getElementById('adm_name').value,desc:document.getElementById('adm_desc').value,ex:document.getElementById('adm_ex').value,popup:document.getElementById('adm_popup').value,status:'',targetClasses:targets,grade:sG,group:sGr}}).then(()=>{alert('저장되었습니다.');resetAdminForm();loadAdminList();updateClassList();toggleLoading(false);}).catch(err=>{alert(err.message);toggleLoading(false);});}
+  function delAdminClass(r){if(!confirm('삭제하시겠습니까?'))return;toggleLoading(true);callApi('deleteClass',{pw:MASTER_PW,row:r}).then(()=>{loadAdminList();toggleLoading(false);}).catch(()=>toggleLoading(false));}
+  function resetAdminForm(){['adm_row','adm_grade_hidden','adm_group_hidden','adm_name','adm_desc','adm_ex','adm_popup'].forEach(id=>document.getElementById(id).value='');document.querySelectorAll('#adm_target_area input').forEach(i=>i.checked=false);document.getElementById('adm_target_area').classList.remove('hidden');document.getElementById('adm_edit_info').classList.add('hidden');document.getElementById('adm_cancel_btn').classList.add('hidden');}
 
-  async function openDelete(id){
-    const pw=await askPassword('비밀번호'); if(!pw)return;
-    toggleLoading(true);
-    callApi('processForm',{mode:'delete',postId:id,password:pw,classTitle:getHidden('f_class'),grade:getHidden('f_grade'),group:getHidden('f_group'),targetLang:currentLang})
-      .then(data=>{ currentPosts=data.posts; currentExample=data.example; render(data.example,sortedPosts()); toggleLoading(false); })
-      .catch(err=>{ alert(err.message); toggleLoading(false); });
-  }
-
-  // ── 관리자 ──
-  function loadAdminList(){
-    callApi('getSettingsList',{pw:MASTER_PW}).then(list=>{
-      document.getElementById('adminList').innerHTML=list.map(c=>`
-        <div class="admin-item">
-          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-            <select onchange="toggleClassStatus(${c.row},this.value)" class="status-pill ${c.status==='ON'?'on':'off'}">
-              <option value="ON" ${c.status==='ON'?'selected':''}>ON</option>
-              <option value="OFF" ${c.status==='OFF'?'selected':''}>OFF</option>
-            </select>
-            <span style="font-size:0.88rem;">${c.grade} ${c.group} — <b>${c.name}</b></span>
-          </div>
-          <div style="display:flex;gap:12px;">
-            <a onclick='editAdminUI(${JSON.stringify(c)})' style="font-size:0.82rem;font-weight:700;color:var(--accent);cursor:pointer;">수정</a>
-            <a onclick="delAdminClass(${c.row})" style="font-size:0.82rem;font-weight:700;color:#ef4444;cursor:pointer;">삭제</a>
-          </div>
-        </div>`).join('');
-    }).catch(()=>{});
-  }
-
-  function toggleClassStatus(row,status){
-    toggleLoading(true);
-    callApi('updateClassStatus',{pw:MASTER_PW,row,newStatus:status}).then(()=>{ loadAdminList(); updateClassList(); toggleLoading(false); }).catch(()=>toggleLoading(false));
-  }
-
-  function editAdminUI(c){
-    document.getElementById('adm_row').value=c.row;
-    document.getElementById('adm_grade_hidden').value=c.grade;
-    document.getElementById('adm_group_hidden').value=c.group;
-    document.getElementById('adm_name').value=c.name;
-    document.getElementById('adm_desc').value=c.desc;
-    document.getElementById('adm_ex').value=c.ex;
-    document.getElementById('adm_popup').value=c.popup||'';
-    document.getElementById('adm_target_area').classList.add('hidden');
-    const info=document.getElementById('adm_edit_info');
-    info.classList.remove('hidden'); info.innerText=`수정 중: [${c.grade} ${c.group}] ${c.name}`;
-    document.getElementById('adm_cancel_btn').classList.remove('hidden');
-    window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
-  }
-
-  function saveAdminClass(){
-    const rowId=document.getElementById('adm_row').value;
-    let targets=[],sG='',sGr='';
-    if(rowId){ sG=document.getElementById('adm_grade_hidden').value; sGr=document.getElementById('adm_group_hidden').value; }
-    else{
-      const gL=[...document.querySelectorAll('.adm-g:checked')].map(i=>i.value);
-      const bL=[...document.querySelectorAll('.adm-b:checked')].map(i=>i.value);
-      if(!gL.length||!bL.length){alert('학년과 반을 각각 최소 하나씩 선택해주세요.');return;}
-      gL.forEach(g=>bL.forEach(b=>targets.push({grade:g,group:b})));
-    }
-    toggleLoading(true);
-    callApi('addClass',{adminPw:MASTER_PW,classInfo:{
-      row:rowId, name:document.getElementById('adm_name').value,
-      desc:document.getElementById('adm_desc').value, ex:document.getElementById('adm_ex').value,
-      popup:document.getElementById('adm_popup').value,
-      status:'', targetClasses:targets, grade:sG, group:sGr,
-    }}).then(()=>{ alert('저장되었습니다.'); resetAdminForm(); loadAdminList(); updateClassList(); toggleLoading(false); })
-      .catch(err=>{ alert(err.message); toggleLoading(false); });
-  }
-
-  function delAdminClass(r){ if(!confirm('삭제하시겠습니까?'))return; toggleLoading(true); callApi('deleteClass',{pw:MASTER_PW,row:r}).then(()=>{ loadAdminList(); toggleLoading(false); }).catch(()=>toggleLoading(false)); }
-
-  function resetAdminForm(){
-    ['adm_row','adm_grade_hidden','adm_group_hidden','adm_name','adm_desc','adm_ex','adm_popup'].forEach(id=>document.getElementById(id).value='');
-    document.querySelectorAll('#adm_target_area input').forEach(i=>i.checked=false);
-    document.getElementById('adm_target_area').classList.remove('hidden');
-    document.getElementById('adm_edit_info').classList.add('hidden');
-    document.getElementById('adm_cancel_btn').classList.add('hidden');
-  }
-
-  window.onload=()=>{ updateClassList(); setLanguage('ko'); };
+  window.onload = () => { buildKeyboard(); bindKeyboardTargets(); updateClassList(); setLanguage('ko'); };
 </script>
 </body>
 </html>
