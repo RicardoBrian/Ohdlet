@@ -1,0 +1,11 @@
+{
+  "name": "ohdlet",
+  "version": "1.0.0",
+  "description": "관산중학교 정보 게시판",
+  "scripts": {
+    "dev": "netlify dev"
+  },
+  "dependencies": {
+    "googleapis": "^144.0.0"
+  }
+}

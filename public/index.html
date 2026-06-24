@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --main: #4a5568; --primary: #3182ce; --bg: #f7fafc; --text: #2d3748; --sub: #718096; }
+    body { background-color: var(--bg); font-family: 'Gowun Dodum', sans-serif; color: var(--text); line-height: 1.6; }
+    .hidden { display: none !important; }
+    .container-custom { max-width: 1300px; margin: 0 auto; padding: 20px; }
+
+    .card-flat { background: white; border-radius: 24px; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px rgba(0,0,0,0.03); padding: 30px; }
+
+    .grid-board { column-count: 4; column-gap: 20px; width: 100%; margin-top: 15px; }
+    @media (max-width: 1200px) { .grid-board { column-count: 3; } }
+    @media (max-width: 800px) { .grid-board { column-count: 2; } }
+    @media (max-width: 500px) { .grid-board { column-count: 1; } }
+
+    .post-card { break-inside: avoid; page-break-inside: avoid; display: inline-block; width: 100%; background: white; border-radius: 20px; padding: 24px; border: 1px solid rgba(0,0,0,0.04); margin-bottom: 20px; transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s; position: relative; }
+    .post-card:hover { transform: translateY(-6px); box-shadow: 0 14px 28px rgba(0,0,0,0.08); }
+
+    .teacher-card { background: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%) !important; color: white !important; border: none !important; box-shadow: 0 8px 20px rgba(49,130,206,0.3) !important; column-span: all; margin-bottom: 25px; }
+    .teacher-card * { color: white !important; }
+    .teacher-card .post-sub { font-size: 1.3rem !important; border-bottom: 1px solid rgba(255,255,255,0.25); padding-bottom: 8px; margin-bottom: 12px; font-weight: 700; }
+
+    #boardTitle { font-size: 2.5rem !important; font-weight: 800; color: var(--primary); letter-spacing: -1px; margin-bottom: 5px; }
+    #boardDesc { font-size: 1.25rem !important; color: var(--main); margin-bottom: 25px; }
+
+    .post-sub, .post-msg { white-space: pre-wrap; word-break: break-all; }
+    .post-sub { font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; color: var(--main); line-height: 1.4; }
+    .post-msg { font-size: 1.05rem; opacity: 0.9; }
+    .post-msg a:hover { opacity: 0.8; }
+
+    .img-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
+    .post-img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 12px; cursor: zoom-in; border: 1px solid #edf2f7; transition: 0.2s; }
+    .post-img:hover { opacity: 0.9; filter: brightness(0.95); }
+
+    .post-meta { font-size: 0.85rem; color: var(--sub); display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(0,0,0,0.05); margin-top: 18px; padding-top: 12px; }
+    .action-links a { margin-left: 12px; font-weight: 700; cursor: pointer; color: var(--primary); text-decoration: none; transition: 0.2s; }
+    .action-links a:hover { opacity: 0.7; }
+
+    @keyframes heartBeat { 0%, 100% { transform: scale(1); } 25% { transform: scale(1.4); } 50% { transform: scale(1); } 75% { transform: scale(1.2); } }
+    .like-area { display: flex; align-items: center; cursor: pointer; transition: 0.2s; user-select: none; background: rgba(255,255,255,0.5); padding: 4px 10px; border-radius: 20px; }
+    .like-area:hover { background: rgba(0,0,0,0.03); }
+    .like-area.animate { animation: heartBeat 0.4s ease-in-out; }
+    .like-area.voted { color: #e53e3e !important; background: #fff5f5; }
+
+    .top-nav { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 15px 25px; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+
+    .btn-action { background: var(--primary); color: white; border-radius: 14px; font-weight: 700; padding: 14px; width: 100%; border: none; cursor: pointer; font-size: 1.15rem; transition: 0.2s; box-shadow: 0 4px 12px rgba(49,130,206,0.2); }
+    .btn-action:hover { background: #2b6cb0; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(49,130,206,0.3); }
+
+    .lang-btn { padding: 8px 16px; border-radius: 10px; border: 1px solid #e2e8f0; background: white; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .lang-btn:hover { background: #f7fafc; }
+    .lang-btn.active { background: var(--main); color: white; border-color: var(--main); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+
+    .upload-box { border: 2px dashed #cbd5e0; border-radius: 16px; padding: 20px; text-align: center; color: var(--sub); cursor: pointer; margin-bottom: 15px; background: #f8fafc; transition: 0.2s; }
+    .upload-box:hover { border-color: var(--primary); background: #ebf8ff; color: var(--primary); }
+
+    .preview-container { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
+    .preview-item { position: relative; width: 60px; height: 60px; }
+    .preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .preview-item .del-btn { position: absolute; top: -6px; right: -6px; background: #e53e3e; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 11px; border: none; cursor: pointer; box-shadow: 0 2px 4px rgba(229,62,62,0.3); }
+
+    #loadingOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 10000; display: none; flex-direction: column; justify-content: center; align-items: center; }
+    .spinner { border: 4px solid #edf2f7; border-top: 4px solid var(--primary); border-radius: 50%; width: 45px; height: 45px; animation: spin 0.8s linear infinite; margin-bottom: 15px; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    .img-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); display: none; justify-content: center; align-items: center; z-index: 9999; cursor: zoom-out; backdrop-filter: blur(5px); }
+    .img-modal img { max-width: 90%; max-height: 90%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+
+    .checkbox-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; background: #f8fafc; padding: 20px; border-radius: 16px; margin-bottom: 15px; border: 1px solid #edf2f7; }
+    .status-select { border: 1px solid #e2e8f0; border-radius: 8px; padding: 4px 8px; font-weight: 700; cursor: pointer; outline: none; font-size: 0.85rem; transition: 0.2s; }
+    .status-select.is-on { color: #3182ce; background: #ebf8ff; border-color: #bee3f8; }
+    .status-select.is-off { color: #e53e3e; background: #fff5f5; border-color: #fed7d7; }
+  </style>
+</head>
+<body>
+  <div id="loadingOverlay"><div class="spinner"></div><div id="loadingText" style="font-weight:700; color:var(--main); font-size:1.1rem;">처리 중...</div></div>
+  <div id="imageModal" class="img-modal" onclick="closeModal()"><img id="modalImg" src=""></div>
+
+  <nav class="top-nav">
+    <div class="buttons">
+      <button class="lang-btn active" id="btn-ko" onclick="setLanguage('ko')">한</button>
+      <button class="lang-btn" id="btn-zh" onclick="setLanguage('zh')">中</button>
+      <button class="lang-btn" id="btn-ru" onclick="setLanguage('ru')">РУ</button>
+    </div>
+    <div class="buttons">
+      <button class="button is-rounded is-white mr-2" style="font-weight:700; box-shadow: 0 2px 5px rgba(0,0,0,0.05);" onclick="goHome()">🏠 홈으로</button>
+      <button class="button is-ghost" style="font-weight:700;" onclick="toggleAdmin()">⚙️ 관리</button>
+    </div>
+  </nav>
+
+  <div class="container-custom">
+    <div id="step1" class="card-flat" style="max-width: 500px; margin: 50px auto;">
+      <h1 class="title is-4 has-text-centered mb-5" id="ui-main-title" style="font-weight:800; color:var(--primary);">관산중학교 정보 게시판</h1>
+      <div class="field"><label class="label is-small">학년</label><div class="select is-fullwidth"><select id="grade" onchange="updateClassList()"><option>1학년</option><option>2학년</option><option>3학년</option></select></div></div>
+      <div class="field"><label class="label is-small">반</label><div class="select is-fullwidth"><select id="group" onchange="updateClassList()"><option>1반</option><option>2반</option><option>3반</option><option>4반</option><option>5반</option></select></div></div>
+      <div class="field mb-6"><label class="label is-small">수업 선택</label><div class="select is-fullwidth is-info"><select id="classList"><option>수업을 선택하세요</option></select></div></div>
+      <button class="btn-action" onclick="startBoard()" id="ui-enter-btn">입장하기</button>
+    </div>
+
+    <div id="step2" class="hidden">
+      <div class="is-flex is-justify-content-space-between is-align-items-center mb-5">
+        <div><h1 id="boardTitle"></h1><p id="boardDesc"></p></div>
+        <button class="button is-rounded is-white" style="font-weight:700; box-shadow: 0 2px 6px rgba(0,0,0,0.05);" onclick="manualRefresh()">🔄 새로고침</button>
+      </div>
+
+      <div id="postBox" class="card-flat mb-6" style="max-width: 700px; margin: 0 auto; border: 2px solid var(--primary);">
+        <form id="postForm" onsubmit="submitPost(event)">
+          <input type="hidden" name="mode" id="f_mode" value="add">
+          <input type="hidden" name="postId" id="f_postId">
+          <input type="hidden" name="targetLang" id="f_lang" value="ko">
+          <input type="hidden" name="grade" id="f_grade">
+          <input type="hidden" name="group" id="f_group">
+          <input type="hidden" name="classTitle" id="f_class">
+          <input type="hidden" name="combinedImageData" id="f_combinedImg">
+          <div class="columns is-mobile mb-3">
+            <div class="column is-3"><input class="input is-rounded" name="num" id="p_num" placeholder="번호" required></div>
+            <div class="column"><input class="input is-rounded" name="name" id="p_name" placeholder="이름" required></div>
+            <div class="column is-4"><input class="input is-rounded" name="password" id="p_pw" type="password" placeholder="비번" required></div>
+          </div>
+          <input class="input is-rounded mb-3" name="subject" id="p_sub" placeholder="제목" required>
+          <textarea class="textarea mb-4" style="border-radius:15px;" name="message" id="p_msg" rows="4" placeholder="내용을 입력하세요" required></textarea>
+          <div class="upload-box" id="ui-upload-label" onclick="document.getElementById('fileInput').click()">📷 클립보드 붙여넣기(Ctrl+V) 또는 클릭하여 이미지 첨부 (최대 4장)<div id="previewArea" class="preview-container"></div></div>
+          <input type="file" id="fileInput" class="hidden" accept="image/*" multiple onchange="handleFiles(this.files)">
+          <button id="subBtn" type="submit" class="btn-action">게시물 등록</button>
+          <button id="cancelEditBtn" type="button" class="button is-light is-rounded is-fullwidth mt-3 hidden" onclick="cancelEdit()" style="font-weight:700;">수정 취소</button>
+        </form>
+      </div>
+
+      <div id="display" class="grid-board"></div>
+      <div class="has-text-centered mt-6 mb-6"><button class="button is-white is-rounded" style="font-weight:700; box-shadow: 0 4px 10px rgba(0,0,0,0.05);" onclick="goHome()">🏠 처음 화면으로</button></div>
+    </div>
+
+    <div id="adminPanel" class="card-flat hidden mt-5" style="border:2px solid #e2e8f0;">
+      <h2 class="subtitle is-5 mb-4" style="font-weight:800; color:var(--main);">🛠 수업 관리 패널</h2>
+      <div id="adm_edit_info" class="mb-4 hidden" style="font-size: 1.1rem; font-weight:800; color:var(--primary); background:#ebf8ff; padding:15px; border-radius:12px;"></div>
+      <input type="hidden" id="adm_row"><input type="hidden" id="adm_grade_hidden"><input type="hidden" id="adm_group_hidden">
+
+      <div class="checkbox-grid" id="adm_target_area">
+        <label class="checkbox" style="font-weight:700;"><input type="checkbox" class="adm-g" value="1학년"> 1학년</label>
+        <label class="checkbox" style="font-weight:700;"><input type="checkbox" class="adm-g" value="2학년"> 2학년</label>
+        <label class="checkbox" style="font-weight:700;"><input type="checkbox" class="adm-g" value="3학년"> 3학년</label>
+        <hr style="grid-column: span 3; margin: 5px 0;">
+        <label class="checkbox"><input type="checkbox" class="adm-b" value="1반"> 1반</label>
+        <label class="checkbox"><input type="checkbox" class="adm-b" value="2반"> 2반</label>
+        <label class="checkbox"><input type="checkbox" class="adm-b" value="3반"> 3반</label>
+        <label class="checkbox"><input type="checkbox" class="adm-b" value="4반"> 4반</label>
+        <label class="checkbox"><input type="checkbox" class="adm-b" value="5반"> 5반</label>
+      </div>
+
+      <input class="input is-rounded mb-3" id="adm_name" placeholder="수업명">
+      <textarea class="textarea mb-3" style="border-radius:12px;" id="adm_desc" rows="2" placeholder="수업 상세 설명"></textarea>
+      <textarea class="textarea mb-4" style="border-radius:12px;" id="adm_ex" rows="2" placeholder="선생님 안내 예시 (게시판 최상단 노출)"></textarea>
+
+      <div class="buttons">
+        <button class="button is-primary is-rounded" style="font-weight:700;" onclick="saveAdminClass()">저장 / 내용 반영</button>
+        <button id="adm_cancel_btn" class="button is-light is-rounded hidden" style="font-weight:700;" onclick="resetAdminForm()">작업 취소</button>
+      </div>
+      <hr>
+      <div id="adminList"></div>
+    </div>
+  </div>
+
+  <script>
+    let currentLang = 'ko';
+    let imgList = [];
+    let currentPosts = [];
+    const MASTER_PW = "9600";
+    const bgColors = ["#fdfbf7","#fefaf0","#f8fafc","#f0fdf4","#fff5f5","#faf5ff","#f5f3ff","#eff6ff"];
+    const uiText = {
+      ko: { opt:"수업을 선택하세요", enter:"입장하기", upload:"📷 클립보드 붙여넣기(Ctrl+V) 또는 클릭하여 이미지 첨부", submit:"게시물 등록", edit_finish:"수정 완료", loading:"데이터 불러오는 중...", translating:"번역 중..." },
+      zh: { opt:"请选择课程", enter:"进入", upload:"📷 粘贴或点击上传图片", submit:"发布", edit_finish:"完成修改", loading:"加载中...", translating:"翻译中..." },
+      ru: { opt:"Выберите урок", enter:"Войти", upload:"📷 Вставьте или нажмите для загрузки фото", submit:"Опубликовать", edit_finish:"Изм.завершено", loading:"Загрузка...", translating:"Перевод..." }
+    };
+
+    // GAS의 google.script.run을 대체하는 공통 fetch 함수
+    async function callApi(fn, params) {
+      const res = await fetch('/api', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fn, ...params }),
+      });
+      const json = await res.json();
+      if (!json.ok) throw new Error(json.error || '서버 오류');
+      return json.result;
+    }
+
+    function toggleLoading(show, text) {
+      document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+      if (text) document.getElementById('loadingText').innerText = text;
+    }
+    function openModal(src) { document.getElementById('modalImg').src = src; document.getElementById('imageModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('imageModal').style.display = 'none'; }
+
+    function formatMessage(text) {
+      if (!text) return "";
+      let safe = text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+      return safe.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color:#3182ce;text-decoration:underline;font-weight:700;">$1</a>');
+    }
+
+    function setLanguage(lang) {
+      const isRefresh = !document.getElementById('step2').classList.contains('hidden');
+      if (isRefresh) toggleLoading(true, uiText[lang].translating);
+      currentLang = lang;
+      document.getElementById('f_lang').value = lang;
+      const t = uiText[lang];
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.id === 'btn-' + lang));
+      document.getElementById('ui-enter-btn').innerText = t.enter;
+      document.getElementById('ui-upload-label').firstChild.textContent = t.upload;
+      document.getElementById('subBtn').innerText = (document.getElementById('f_mode').value === 'edit') ? t.edit_finish : t.submit;
+      updateClassList();
+      if (isRefresh) manualRefresh();
+    }
+
+    function updateClassList() {
+      const grade = document.getElementById('grade').value;
+      const group = document.getElementById('group').value;
+      callApi('getInitData', { grade, group }).then(data => {
+        const select = document.getElementById('classList');
+        select.innerHTML = `<option>${uiText[currentLang].opt}</option>`;
+        if (data && data.classList) data.classList.forEach(c => select.innerHTML += `<option>${c.name}</option>`);
+      }).catch(() => {});
+    }
+
+    function goHome() {
+      document.getElementById('step2').classList.add('hidden');
+      document.getElementById('step1').classList.remove('hidden');
+      document.getElementById('adminPanel').classList.add('hidden');
+      cancelEdit();
+      window.scrollTo(0, 0);
+    }
+
+    function toggleAdmin() {
+      const pw = prompt("관리자 PW:");
+      if (pw === MASTER_PW) {
+        document.getElementById('adminPanel').classList.toggle('hidden');
+        if (!document.getElementById('adminPanel').classList.contains('hidden')) {
+          loadAdminList();
+          window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+      }
+    }
+
+    function startBoard() {
+      const cls = document.getElementById('classList').value;
+      if (cls.includes("선택")) return;
+      toggleLoading(true, uiText[currentLang].loading);
+      document.getElementById('f_grade').value = document.getElementById('grade').value;
+      document.getElementById('f_group').value = document.getElementById('group').value;
+      document.getElementById('f_class').value = cls;
+      document.getElementById('step1').classList.add('hidden');
+      document.getElementById('step2').classList.remove('hidden');
+      manualRefresh();
+    }
+
+    function manualRefresh() {
+      toggleLoading(true, uiText[currentLang].loading);
+      callApi('getPosts', {
+        classTitle: document.getElementById('f_class').value,
+        grade: document.getElementById('f_grade').value,
+        group: document.getElementById('f_group').value,
+        targetLang: currentLang,
+      }).then(data => {
+        document.getElementById('boardTitle').innerText = data.title;
+        document.getElementById('boardDesc').innerText = data.desc;
+        currentPosts = data.posts;
+        render(data.example, data.posts);
+        toggleLoading(false);
+      }).catch(() => toggleLoading(false));
+    }
+
+    function render(ex, posts) {
+      const display = document.getElementById('display');
+      let html = "";
+      if (ex) html += `<div class="post-card teacher-card"><div class="post-sub">선생님 안내</div><div class="post-msg">${formatMessage(ex)}</div></div>`;
+      const colCount = window.innerWidth > 1200 ? 4 : (window.innerWidth > 800 ? 3 : (window.innerWidth > 500 ? 2 : 1));
+      const columns = Array.from({ length: colCount }, () => []);
+      posts.forEach((p, i) => { columns[i % colCount].push(p); });
+      const sortedPosts = columns.flat();
+      sortedPosts.forEach((p, i) => {
+        const hasLiked = localStorage.getItem('voted_' + p.id);
+        html += `<div class="post-card" style="background-color:${bgColors[i % bgColors.length]}">
+          <div class="post-sub">${p.subject}</div>
+          <div class="post-msg">${formatMessage(p.message)}</div>
+          <div class="img-grid">${p.imgs.map(s => `<img src="${s}" class="post-img" onclick="openModal('${s}')" loading="lazy">`).join('')}</div>
+          <div class="post-meta">
+            <div class="like-area ${hasLiked ? 'voted' : ''}" onclick="toggleLikeUI('${p.id}', this)"><span style="font-size:1.2rem;margin-right:4px;">❤️</span><span class="like-count" style="font-weight:800;">${p.likes}</span></div>
+            <div class="action-links"><a onclick="handleEditClick('${p.id}')">수정</a> | <a onclick="openDelete('${p.id}')" style="color:#e53e3e;">삭제</a></div>
+          </div>
+          <div style="font-size:0.7rem;opacity:0.6;text-align:right;margin-top:10px;font-weight:700;">${p.name}(${p.num}) · ${p.time}</div>
+        </div>`;
+      });
+      display.innerHTML = html;
+    }
+
+    function toggleLikeUI(id, el) {
+      const hasLiked = localStorage.getItem('voted_' + id);
+      const countEl = el.querySelector('.like-count');
+      let cur = parseInt(countEl.innerText);
+      el.classList.add('animate');
+      setTimeout(() => el.classList.remove('animate'), 400);
+      if (hasLiked) {
+        countEl.innerText = Math.max(0, cur - 1);
+        el.classList.remove('voted');
+        localStorage.removeItem('voted_' + id);
+        callApi('toggleLike', { postId: id, isCancel: true }).catch(() => {});
+      } else {
+        countEl.innerText = cur + 1;
+        el.classList.add('voted');
+        localStorage.setItem('voted_' + id, 'true');
+        callApi('toggleLike', { postId: id, isCancel: false }).catch(() => {});
+      }
+    }
+
+    function handleFiles(files) {
+      Array.from(files).forEach(file => {
+        if (imgList.length >= 4) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const max = 500; let w = img.width, h = img.height;
+            if (w > max || h > max) { if (w > h) { h *= max/w; w = max; } else { w *= max/h; h = max; } }
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            imgList.push(canvas.toDataURL('image/jpeg', 0.6));
+            updatePreview();
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function updatePreview() {
+      document.getElementById('previewArea').innerHTML = imgList.map((s, i) =>
+        `<div class="preview-item"><img src="${s}"><button type="button" class="del-btn" onclick="removeImg(${i})">×</button></div>`
+      ).join('');
+    }
+    function removeImg(i) { imgList.splice(i, 1); updatePreview(); }
+
+    window.addEventListener('paste', e => {
+      if (!document.getElementById('step2').classList.contains('hidden')) {
+        const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+        for (let item of items) { if (item.type.indexOf("image") !== -1) handleFiles([item.getAsFile()]); }
+      }
+    });
+
+    function submitPost(event) {
+      event.preventDefault();
+      toggleLoading(true, "게시물 저장 및 자동 번역 중...");
+      document.getElementById('subBtn').disabled = true;
+      const form = document.getElementById('postForm');
+      const data = Object.fromEntries(new FormData(form));
+      data.combinedImageData = imgList.join('|');
+      callApi('processForm', data).then(result => {
+        currentPosts = result.posts;
+        render(result.example, result.posts);
+        form.reset();
+        cancelEdit();
+        toggleLoading(false);
+      }).catch(err => {
+        alert(err.message);
+        document.getElementById('subBtn').disabled = false;
+        toggleLoading(false);
+      });
+    }
+
+    function handleEditClick(postId) {
+      const post = currentPosts.find(p => p.id === postId);
+      if (!post) return;
+      const pw = prompt("비밀번호를 입력하세요:");
+      if (!pw) return;
+      document.getElementById('f_mode').value = 'edit';
+      document.getElementById('f_postId').value = post.id;
+      document.getElementById('p_name').value = post.name;
+      document.getElementById('p_num').value = post.num;
+      document.getElementById('p_sub').value = post.origSub;
+      document.getElementById('p_msg').value = post.origMsg;
+      document.getElementById('p_pw').value = pw;
+      imgList = post.origImgs ? post.origImgs.split('|') : [];
+      updatePreview();
+      document.getElementById('subBtn').innerText = uiText[currentLang].edit_finish;
+      document.getElementById('cancelEditBtn').classList.remove('hidden');
+      window.scrollTo({ top: document.getElementById('postBox').offsetTop - 80, behavior: 'smooth' });
+    }
+
+    function cancelEdit() {
+      document.getElementById('postForm').reset();
+      document.getElementById('f_mode').value = 'add';
+      imgList = [];
+      updatePreview();
+      document.getElementById('subBtn').innerText = uiText[currentLang].submit;
+      document.getElementById('subBtn').disabled = false;
+      document.getElementById('cancelEditBtn').classList.add('hidden');
+    }
+
+    function openDelete(id) {
+      const pw = prompt("비밀번호:");
+      if (!pw) return;
+      toggleLoading(true);
+      callApi('processForm', {
+        mode: "delete", postId: id, password: pw,
+        classTitle: document.getElementById('f_class').value,
+        grade: document.getElementById('f_grade').value,
+        group: document.getElementById('f_group').value,
+        targetLang: currentLang,
+      }).then(data => {
+        currentPosts = data.posts;
+        render(data.example, data.posts);
+        toggleLoading(false);
+      }).catch(err => { alert(err.message); toggleLoading(false); });
+    }
+
+    function loadAdminList() {
+      callApi('getSettingsList', { pw: MASTER_PW }).then(list => {
+        document.getElementById('adminList').innerHTML = list.map(c => `
+          <div class="is-flex is-justify-content-space-between is-align-items-center mb-3 p-3" style="background:white;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 2px 5px rgba(0,0,0,0.02);">
+            <div>
+              <select onchange="toggleClassStatus(${c.row}, this.value)" class="status-select ${c.status === 'ON' ? 'is-on' : 'is-off'}">
+                <option value="ON" ${c.status==='ON'?'selected':''}>ON</option>
+                <option value="OFF" ${c.status==='OFF'?'selected':''}>OFF</option>
+              </select>
+              <span class="ml-2" style="font-size:0.95rem;">${c.grade} ${c.group} - <b style="font-size:1.05rem;">${c.name}</b></span>
+            </div>
+            <div>
+              <a onclick='editAdminUI(${JSON.stringify(c)})' style="font-weight:700;color:#3182ce;">수정</a> |
+              <a onclick="delAdminClass(${c.row})" style="color:#e53e3e;font-weight:700;">삭제</a>
+            </div>
+          </div>`).join('');
+      }).catch(() => {});
+    }
+
+    function toggleClassStatus(row, status) {
+      toggleLoading(true, "상태 변경 중...");
+      callApi('updateClassStatus', { pw: MASTER_PW, row, newStatus: status }).then(() => {
+        loadAdminList();
+        updateClassList();
+        toggleLoading(false);
+      }).catch(() => toggleLoading(false));
+    }
+
+    function editAdminUI(c) {
+      document.getElementById('adm_row').value = c.row;
+      document.getElementById('adm_grade_hidden').value = c.grade;
+      document.getElementById('adm_group_hidden').value = c.group;
+      document.getElementById('adm_name').value = c.name;
+      document.getElementById('adm_desc').value = c.desc;
+      document.getElementById('adm_ex').value = c.ex;
+      document.getElementById('adm_target_area').classList.add('hidden');
+      const editInfo = document.getElementById('adm_edit_info');
+      editInfo.classList.remove('hidden');
+      editInfo.innerText = `✏️ 수정 중: [${c.grade} ${c.group}] ${c.name}`;
+      document.getElementById('adm_cancel_btn').classList.remove('hidden');
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    function saveAdminClass() {
+      const rowId = document.getElementById('adm_row').value;
+      let targets = [], singleGrade = "", singleGroup = "";
+      if (rowId) {
+        singleGrade = document.getElementById('adm_grade_hidden').value;
+        singleGroup = document.getElementById('adm_group_hidden').value;
+      } else {
+        const gList = Array.from(document.querySelectorAll('.adm-g:checked')).map(i => i.value);
+        const bList = Array.from(document.querySelectorAll('.adm-b:checked')).map(i => i.value);
+        if (gList.length === 0 || bList.length === 0) { alert("학년과 반을 각각 최소 하나씩 선택해주세요."); return; }
+        gList.forEach(g => bList.forEach(b => targets.push({ grade: g, group: b })));
+      }
+      toggleLoading(true, "설정 저장 중...");
+      const info = {
+        row: rowId, name: document.getElementById('adm_name').value,
+        desc: document.getElementById('adm_desc').value, ex: document.getElementById('adm_ex').value,
+        status: "", targetClasses: targets, grade: singleGrade, group: singleGroup,
+      };
+      callApi('addClass', { adminPw: MASTER_PW, classInfo: info }).then(() => {
+        alert("성공적으로 저장되었습니다.");
+        resetAdminForm();
+        loadAdminList();
+        updateClassList();
+        toggleLoading(false);
+      }).catch(err => { alert(err.message); toggleLoading(false); });
+    }
+
+    function delAdminClass(r) {
+      if (!confirm("정말로 삭제하시겠습니까?")) return;
+      toggleLoading(true);
+      callApi('deleteClass', { pw: MASTER_PW, row: r }).then(() => {
+        loadAdminList();
+        toggleLoading(false);
+      }).catch(() => toggleLoading(false));
+    }
+
+    function resetAdminForm() {
+      document.getElementById('adm_row').value = "";
+      document.getElementById('adm_grade_hidden').value = "";
+      document.getElementById('adm_group_hidden').value = "";
+      document.getElementById('adm_name').value = "";
+      document.getElementById('adm_desc').value = "";
+      document.getElementById('adm_ex').value = "";
+      document.querySelectorAll('#adm_target_area input').forEach(i => i.checked = false);
+      document.getElementById('adm_target_area').classList.remove('hidden');
+      document.getElementById('adm_edit_info').classList.add('hidden');
+      document.getElementById('adm_cancel_btn').classList.add('hidden');
+    }
+
+    window.onload = () => { updateClassList(); setLanguage('ko'); };
+  </script>
+</body>
+</html>
