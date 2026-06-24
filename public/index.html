@@ -4,399 +4,410 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>관산중학교 정보 게시판</title>
-  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
   <style>
-    /* ── 변수 & 리셋 ── */
+    /* ── 토큰 ── */
     :root {
-      --primary: #6c8ef7;
-      --primary2: #a78bfa;
-      --bg1: #dce8ff;
-      --bg2: #e9d8fd;
-      --bg3: #d1fae5;
-      --text: #1e293b;
-      --sub: #64748b;
-      --glass: rgba(255,255,255,0.35);
-      --glass-hover: rgba(255,255,255,0.55);
-      --glass-border: rgba(255,255,255,0.6);
-      --glass-shadow: 0 8px 32px rgba(100,120,220,0.12);
-      --card-bg: rgba(255,255,255,0.28);
-      --input-bg: rgba(255,255,255,0.5);
-      --radius: 20px;
-      --radius-sm: 12px;
+      --bg: #f7f7f7;
+      --surface: #ffffff;
+      --border: #e8e8e8;
+      --text: #111111;
+      --sub: #999999;
+      --accent: #2563eb;
+      --accent-light: #eff6ff;
+      --shadow: 0 1px 4px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+      --radius: 14px;
+      --radius-sm: 9px;
     }
     body.dark {
-      --bg1: #0f172a;
-      --bg2: #1e1b4b;
-      --bg3: #064e3b;
-      --text: #e2e8f0;
-      --sub: #94a3b8;
-      --glass: rgba(255,255,255,0.06);
-      --glass-hover: rgba(255,255,255,0.12);
-      --glass-border: rgba(255,255,255,0.12);
-      --glass-shadow: 0 8px 32px rgba(0,0,0,0.4);
-      --card-bg: rgba(255,255,255,0.05);
-      --input-bg: rgba(255,255,255,0.08);
-      --primary: #818cf8;
-      --primary2: #c084fc;
+      --bg: #0d0d0d;
+      --surface: #1a1a1a;
+      --border: #2a2a2a;
+      --text: #eeeeee;
+      --sub: #666666;
+      --accent: #3b82f6;
+      --accent-light: rgba(59,130,246,0.1);
+      --shadow: 0 1px 4px rgba(0,0,0,0.4);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.5);
     }
+
+    /* ── 리셋 ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Gowun Dodum', sans-serif;
-      color: var(--text);
-      min-height: 100vh;
-      transition: background 0.4s, color 0.4s;
-      overflow-x: hidden;
-    }
-
-    /* ── 배경 블롭 ── */
-    .blob-wrap { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
-    .blob {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(90px);
-      opacity: 0.55;
-      animation: blobFloat 18s ease-in-out infinite;
-    }
-    .blob:nth-child(1) { width: 500px; height: 500px; background: var(--bg1); top: -100px; left: -100px; animation-delay: 0s; }
-    .blob:nth-child(2) { width: 400px; height: 400px; background: var(--bg2); top: 30%; right: -80px; animation-delay: -6s; }
-    .blob:nth-child(3) { width: 350px; height: 350px; background: var(--bg3); bottom: -80px; left: 30%; animation-delay: -12s; }
-    @keyframes blobFloat {
-      0%,100% { transform: translate(0,0) scale(1); }
-      33% { transform: translate(40px,-40px) scale(1.08); }
-      66% { transform: translate(-30px,30px) scale(0.95); }
-    }
-
-    /* ── 글래스 베이스 ── */
-    .glass {
-      background: var(--glass);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border);
-      box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,0.4);
-    }
-    body.dark .glass { box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,0.08); }
-
-    /* ── 레이아웃 ── */
-    #app { position: relative; z-index: 1; }
-    .container { max-width: 1300px; margin: 0 auto; padding: 20px; }
+    body { background: var(--bg); color: var(--text); font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 15px; line-height: 1.6; transition: background 0.3s, color 0.3s; }
     .hidden { display: none !important; }
 
-    /* ── 상단 네비 ── */
-    .top-nav {
-      position: sticky; top: 0; z-index: 200;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 14px 28px; margin-bottom: 28px;
-    }
-    .nav-left, .nav-right { display: flex; align-items: center; gap: 10px; }
+    /* ── 레이아웃 ── */
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px 60px; }
 
-    /* ── 버튼 공통 ── */
+    /* ── 네비 ── */
+    .nav {
+      position: sticky; top: 0; z-index: 200;
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 0 28px; height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: background 0.3s;
+    }
+    .nav-left, .nav-right { display: flex; align-items: center; gap: 8px; }
+    .nav-logo { font-weight: 700; font-size: 0.95rem; color: var(--text); }
+
+    /* 햄버거 (모바일) */
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: 0.3s; }
+    .mobile-menu {
+      display: none; position: fixed; inset: 56px 0 0 0; z-index: 190;
+      background: var(--surface); border-top: 1px solid var(--border);
+      flex-direction: column; padding: 20px 24px; gap: 12px;
+    }
+    .mobile-menu.open { display: flex; }
+    @media (max-width: 600px) {
+      .hamburger { display: flex; }
+      .nav-right { display: none; }
+    }
+
+    /* ── 버튼 ── */
     .btn {
-      border: 1px solid var(--glass-border); background: var(--glass);
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      color: var(--text); border-radius: 50px; padding: 8px 18px;
-      font-family: inherit; font-size: 0.88rem; font-weight: 700;
-      cursor: pointer; transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      font-family: inherit; font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; border-radius: var(--radius-sm);
+      padding: 7px 14px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--text);
+      transition: background 0.15s, border-color 0.15s, transform 0.1s;
+      white-space: nowrap;
     }
-    .btn:hover { background: var(--glass-hover); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
-    .btn.primary {
-      background: linear-gradient(135deg, var(--primary), var(--primary2));
-      border-color: transparent; color: white;
-      box-shadow: 0 4px 15px rgba(108,142,247,0.35);
-    }
-    .btn.primary:hover { box-shadow: 0 6px 20px rgba(108,142,247,0.5); }
-    .btn.danger { background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.3); color: #ef4444; }
-    .btn.danger:hover { background: rgba(239,68,68,0.25); }
-    .btn.full { width: 100%; border-radius: var(--radius-sm); padding: 14px; font-size: 1.1rem; }
+    .btn:hover { background: var(--bg); }
+    .btn:active { transform: scale(0.97); }
+    .btn.accent { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .btn.accent:hover { opacity: 0.88; background: var(--accent); }
+    .btn.ghost { border-color: transparent; background: transparent; }
+    .btn.ghost:hover { background: var(--bg); }
+    .btn.full { width: 100%; padding: 13px; font-size: 0.95rem; border-radius: var(--radius); }
+    .btn.danger { color: #ef4444; border-color: rgba(239,68,68,0.25); background: transparent; }
+    .btn.danger:hover { background: rgba(239,68,68,0.06); }
 
     /* ── 언어 버튼 ── */
-    .lang-btn { padding: 6px 14px; border-radius: 50px; font-size: 0.82rem; }
-    .lang-btn.active {
-      background: linear-gradient(135deg, var(--primary), var(--primary2));
-      border-color: transparent; color: white;
-    }
+    .lang-btn { padding: 5px 11px; font-size: 0.8rem; }
+    .lang-btn.active { background: var(--text); border-color: var(--text); color: var(--surface); }
 
-    /* ── 다크모드 토글 ── */
+    /* ── 다크 토글 ── */
     .dark-toggle {
-      width: 46px; height: 26px; border-radius: 50px;
-      background: var(--glass); border: 1px solid var(--glass-border);
-      backdrop-filter: blur(12px); cursor: pointer;
-      position: relative; transition: 0.3s;
+      width: 40px; height: 22px; border-radius: 50px;
+      background: var(--border); border: 1px solid var(--border);
+      cursor: pointer; position: relative; transition: background 0.3s;
+      flex-shrink: 0;
     }
+    body.dark .dark-toggle { background: var(--accent); border-color: var(--accent); }
     .dark-toggle::after {
-      content: ''; position: absolute; top: 3px; left: 3px;
-      width: 18px; height: 18px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--primary), var(--primary2));
-      transition: transform 0.3s;
+      content: ''; position: absolute; top: 2px; left: 2px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: #fff; transition: transform 0.3s;
     }
-    body.dark .dark-toggle::after { transform: translateX(20px); }
+    body.dark .dark-toggle::after { transform: translateX(18px); }
 
-    /* ── 스텝1: 선택 카드 ── */
-    .select-card { max-width: 480px; margin: 60px auto; padding: 40px; border-radius: 28px; }
-    .select-card h1 { font-size: 1.9rem; font-weight: 800; text-align: center; margin-bottom: 28px; background: linear-gradient(135deg, var(--primary), var(--primary2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .field { margin-bottom: 16px; }
-    .field label { display: block; font-size: 0.82rem; font-weight: 700; color: var(--sub); margin-bottom: 6px; letter-spacing: 0.05em; text-transform: uppercase; }
-    .glass-select, .glass-input, .glass-textarea {
-      width: 100%; padding: 12px 16px; border-radius: var(--radius-sm);
-      background: var(--input-bg); border: 1px solid var(--glass-border);
-      backdrop-filter: blur(10px); color: var(--text);
-      font-family: inherit; font-size: 1rem;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      outline: none;
+    /* ── 인풋 공통 ── */
+    .inp {
+      width: 100%; padding: 10px 13px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); background: var(--surface); color: var(--text);
+      font-family: inherit; font-size: 0.9rem;
+      transition: border-color 0.15s, box-shadow 0.15s; outline: none;
     }
-    .glass-select:focus, .glass-input:focus, .glass-textarea:focus {
-      border-color: var(--primary); box-shadow: 0 0 0 3px rgba(108,142,247,0.2);
-    }
-    .glass-textarea { resize: vertical; min-height: 80px; }
+    .inp:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+    textarea.inp { resize: vertical; min-height: 90px; line-height: 1.6; }
+    select.inp { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+
+    /* Floating label */
+    .field { position: relative; margin-bottom: 12px; }
+    .field label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--sub); margin-bottom: 5px; letter-spacing: 0.03em; text-transform: uppercase; }
+
+    /* ── 스텝 1 ── */
+    .step1-wrap { display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 56px); }
+    .select-card { width: 100%; max-width: 420px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 36px; box-shadow: var(--shadow-md); }
+    .select-card h1 { font-size: 1.5rem; font-weight: 800; margin-bottom: 28px; text-align: center; }
+    .select-card h1 span { color: var(--accent); }
 
     /* ── 게시판 헤더 ── */
-    .board-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
-    .board-title { font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--primary2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.2; }
-    .board-desc { font-size: 1.1rem; color: var(--sub); margin-top: 6px; }
+    .board-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 28px 0 20px; flex-wrap: wrap; }
+    .board-title { font-size: 1.7rem; font-weight: 800; }
+    .board-desc { font-size: 0.92rem; color: var(--sub); margin-top: 4px; }
+    .header-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
-    /* ── 검색바 ── */
-    .search-wrap { position: relative; margin-bottom: 20px; }
-    .search-wrap .glass-input { padding-left: 44px; border-radius: 50px; }
-    .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 1.1rem; opacity: 0.5; }
+    /* ── 정렬/검색 바 ── */
+    .toolbar { display: flex; gap: 8px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
+    .search-wrap { position: relative; flex: 1; min-width: 180px; }
+    .search-wrap .inp { padding-left: 36px; }
+    .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--sub); font-size: 0.9rem; pointer-events: none; }
+    .sort-group { display: flex; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+    .sort-group button { border: none; border-radius: 0; padding: 7px 13px; font-size: 0.82rem; background: var(--surface); color: var(--sub); font-weight: 600; cursor: pointer; font-family: inherit; transition: 0.15s; }
+    .sort-group button.active { background: var(--text); color: var(--surface); }
 
     /* ── 폼 카드 ── */
-    .form-card { max-width: 700px; margin: 0 auto 28px; padding: 28px; border-radius: 28px; }
-    .form-row { display: grid; grid-template-columns: 80px 1fr 110px; gap: 10px; margin-bottom: 12px; }
+    .form-card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow); }
+    .form-row { display: grid; grid-template-columns: 72px 1fr 100px; gap: 8px; margin-bottom: 12px; }
+    @media (max-width: 500px) { .form-row { grid-template-columns: 1fr 1fr; } .form-row > *:last-child { grid-column: span 2; } }
 
-    /* ── 이미지 업로드 ── */
+    /* ── 업로드 ── */
     .upload-box {
-      border: 2px dashed rgba(108,142,247,0.4); border-radius: var(--radius);
-      padding: 18px; text-align: center; cursor: pointer; color: var(--sub);
-      background: rgba(108,142,247,0.05); transition: 0.2s; margin-bottom: 14px;
+      border: 1.5px dashed var(--border); border-radius: var(--radius);
+      padding: 16px; text-align: center; cursor: pointer; color: var(--sub);
+      font-size: 0.85rem; transition: 0.15s; margin-bottom: 12px;
+      background: var(--bg);
     }
-    .upload-box:hover { border-color: var(--primary); background: rgba(108,142,247,0.12); color: var(--primary); }
+    .upload-box:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
     .preview-container { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
-    .preview-item { position: relative; width: 56px; height: 56px; }
-    .preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
-    .preview-item .del-btn { position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; cursor: pointer; }
+    .preview-item { position: relative; width: 52px; height: 52px; }
+    .preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 7px; border: 1px solid var(--border); }
+    .preview-item .del-btn { position: absolute; top: -5px; right: -5px; background: #ef4444; color: #fff; border: none; border-radius: 50%; width: 17px; height: 17px; font-size: 10px; cursor: pointer; line-height: 17px; }
 
-    /* ── 마소닉 그리드 ── */
-    .grid-board { column-count: 4; column-gap: 18px; margin-top: 10px; }
-    @media (max-width: 1200px) { .grid-board { column-count: 3; } }
-    @media (max-width: 800px)  { .grid-board { column-count: 2; } }
-    @media (max-width: 500px)  { .grid-board { column-count: 1; } }
+    /* ── 그리드 ── */
+    .grid-board { column-count: 3; column-gap: 16px; }
+    @media (max-width: 900px) { .grid-board { column-count: 2; } }
+    @media (max-width: 500px) { .grid-board { column-count: 1; } }
 
     /* ── 포스트 카드 ── */
     .post-card {
       break-inside: avoid; page-break-inside: avoid;
       display: inline-block; width: 100%;
-      background: var(--card-bg);
-      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-      border: 1px solid var(--glass-border);
-      box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,0.35);
-      border-radius: var(--radius); padding: 22px;
-      margin-bottom: 18px;
-      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s;
-      opacity: 0; transform: translateY(24px);
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 18px;
+      margin-bottom: 16px; box-shadow: var(--shadow);
+      transition: box-shadow 0.2s, transform 0.2s;
+      opacity: 0; transform: translateY(12px);
     }
-    .post-card.visible { opacity: 1; transform: translateY(0); }
-    .post-card:hover { transform: translateY(-6px) scale(1.01); box-shadow: 0 20px 40px rgba(100,120,220,0.18), inset 0 1px 0 rgba(255,255,255,0.5); }
-    body.dark .post-card { box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06); }
+    .post-card.visible { opacity: 1; transform: translateY(0); transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.2s, border-color 0.2s; }
+    .post-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
+    .post-card.pinned-card { border-color: var(--accent); }
 
-    /* 핀 카드 */
-    .post-card.pinned-card {
-      border-color: rgba(108,142,247,0.5);
-      box-shadow: 0 0 0 2px rgba(108,142,247,0.25), var(--glass-shadow);
-    }
-    .pin-badge { font-size: 0.72rem; font-weight: 800; color: var(--primary); background: rgba(108,142,247,0.12); padding: 2px 8px; border-radius: 50px; margin-bottom: 8px; display: inline-block; }
+    .pin-badge { font-size: 0.7rem; font-weight: 700; color: var(--accent); margin-bottom: 6px; display: inline-block; }
+    .teacher-card { background: var(--accent) !important; border-color: transparent !important; color: #fff !important; column-span: all; margin-bottom: 16px; box-shadow: var(--shadow-md) !important; }
+    .teacher-card * { color: #fff !important; }
+    .teacher-card .post-sub { font-size: 1rem; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.25); padding-bottom: 7px; margin-bottom: 8px; }
 
-    /* 선생님 카드 */
-    .teacher-card {
-      background: linear-gradient(135deg, rgba(108,142,247,0.7), rgba(167,139,250,0.7)) !important;
-      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-      border-color: rgba(255,255,255,0.4) !important;
-      column-span: all; margin-bottom: 22px;
-      color: white !important;
-    }
-    .teacher-card * { color: white !important; }
-    .teacher-card .post-sub { font-size: 1.2rem !important; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 8px; margin-bottom: 10px; font-weight: 800; }
+    .post-sub { font-size: 0.98rem; font-weight: 700; margin-bottom: 6px; white-space: pre-wrap; word-break: break-all; }
+    .post-msg { font-size: 0.88rem; color: var(--sub); white-space: pre-wrap; word-break: break-all; line-height: 1.65; }
+    .post-msg a { color: var(--accent); text-decoration: underline; }
 
-    .post-sub { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; white-space: pre-wrap; word-break: break-all; }
-    .post-msg { font-size: 1rem; opacity: 0.88; white-space: pre-wrap; word-break: break-all; }
-    .post-msg a { color: var(--primary); text-decoration: underline; font-weight: 700; }
+    /* ── 슬라이더 ── */
+    .img-slider { position: relative; margin-top: 12px; border-radius: var(--radius-sm); overflow: hidden; background: var(--bg); }
+    .slides-track { display: flex; transition: transform 0.32s cubic-bezier(0.4,0,0.2,1); will-change: transform; }
+    .slides-track img { width: 100%; flex-shrink: 0; aspect-ratio: 4/3; object-fit: cover; cursor: zoom-in; display: block; }
+    .slider-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.4); border: none; color: #fff; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
+    .slider-btn:hover { background: rgba(0,0,0,0.7); }
+    .slider-prev { left: 7px; }
+    .slider-next { right: 7px; }
+    .slider-dots { display: flex; justify-content: center; gap: 4px; padding: 7px 0 3px; }
+    .s-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--sub); opacity: 0.35; cursor: pointer; transition: 0.2s; }
+    .s-dot.active { opacity: 1; background: var(--accent); width: 14px; border-radius: 3px; }
 
-    /* ── 이미지 슬라이더 ── */
-    .img-slider { position: relative; margin-top: 14px; border-radius: var(--radius-sm); overflow: hidden; }
-    .slides-track { display: flex; transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); }
-    .slides-track img { width: 100%; flex-shrink: 0; aspect-ratio: 4/3; object-fit: cover; cursor: zoom-in; }
-    .slider-btn {
-      position: absolute; top: 50%; transform: translateY(-50%);
-      background: rgba(0,0,0,0.35); backdrop-filter: blur(6px);
-      border: none; color: white; font-size: 1.2rem; width: 32px; height: 32px;
-      border-radius: 50%; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center;
-    }
-    .slider-btn:hover { background: rgba(0,0,0,0.6); }
-    .slider-prev { left: 8px; }
-    .slider-next { right: 8px; }
-    .slider-dots { display: flex; justify-content: center; gap: 5px; padding: 8px 0 2px; }
-    .s-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--sub); opacity: 0.4; cursor: pointer; transition: 0.2s; }
-    .s-dot.active { opacity: 1; background: var(--primary); width: 18px; border-radius: 3px; }
-
-    /* ── 포스트 메타 ── */
-    .post-meta { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(0,0,0,0.06); margin-top: 14px; padding-top: 10px; font-size: 0.82rem; color: var(--sub); flex-wrap: wrap; gap: 6px; }
-    body.dark .post-meta { border-top-color: rgba(255,255,255,0.08); }
-    .like-area { display: flex; align-items: center; gap: 5px; cursor: pointer; padding: 4px 10px; border-radius: 50px; transition: 0.2s; user-select: none; }
-    .like-area:hover { background: rgba(239,68,68,0.08); }
+    /* ── 메타 ── */
+    .post-meta { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); margin-top: 12px; padding-top: 10px; flex-wrap: wrap; gap: 6px; }
+    .like-area { display: flex; align-items: center; gap: 4px; cursor: pointer; padding: 3px 8px; border-radius: 50px; font-size: 0.82rem; transition: background 0.15s; user-select: none; color: var(--sub); }
+    .like-area:hover { background: var(--bg); }
     .like-area.voted { color: #ef4444; }
-    @keyframes heartBeat { 0%,100% { transform: scale(1); } 30% { transform: scale(1.45); } 60% { transform: scale(1.1); } }
-    .like-area.animate { animation: heartBeat 0.4s ease; }
-    .action-links { display: flex; gap: 10px; }
-    .action-links a { font-weight: 700; cursor: pointer; color: var(--primary); text-decoration: none; transition: opacity 0.2s; }
-    .action-links a:hover { opacity: 0.65; }
-    .action-links .pin-link { color: var(--sub); }
-    .action-links .pin-link.is-pinned { color: var(--primary); }
-    .post-byline { font-size: 0.7rem; opacity: 0.5; text-align: right; margin-top: 8px; }
+    @keyframes heartBeat { 0%,100% { transform: scale(1); } 30% { transform: scale(1.4); } 60% { transform: scale(1.1); } }
+    .like-area.animate { animation: heartBeat 0.35s ease; }
+    .action-links { display: flex; gap: 10px; font-size: 0.8rem; }
+    .action-links a { cursor: pointer; color: var(--sub); font-weight: 600; transition: color 0.15s; }
+    .action-links a:hover { color: var(--text); }
+    .action-links .del-link:hover { color: #ef4444; }
+    .action-links .pin-link.is-pinned { color: var(--accent); }
+    .post-byline { font-size: 0.72rem; color: var(--sub); text-align: right; margin-top: 8px; }
+
+    /* ── 스켈레톤 ── */
+    .skeleton { background: linear-gradient(90deg, var(--border) 25%, var(--bg) 50%, var(--border) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 6px; }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    .skel-card { break-inside: avoid; display: inline-block; width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 16px; }
+    .skel-line { height: 12px; margin-bottom: 8px; }
+    .skel-img { height: 120px; margin: 12px 0; border-radius: var(--radius-sm); }
 
     /* ── 로딩 ── */
-    #loadingOverlay { position: fixed; inset: 0; z-index: 9000; display: none; flex-direction: column; justify-content: center; align-items: center; background: rgba(255,255,255,0.6); backdrop-filter: blur(8px); }
-    body.dark #loadingOverlay { background: rgba(0,0,0,0.5); }
-    .spinner { width: 42px; height: 42px; border-radius: 50%; border: 4px solid rgba(108,142,247,0.2); border-top-color: var(--primary); animation: spin 0.8s linear infinite; margin-bottom: 14px; }
+    #loadingOverlay { position: fixed; inset: 0; z-index: 9000; display: none; justify-content: center; align-items: center; background: rgba(255,255,255,0.75); backdrop-filter: blur(4px); }
+    body.dark #loadingOverlay { background: rgba(0,0,0,0.6); }
+    .spinner { width: 36px; height: 36px; border-radius: 50%; border: 3px solid var(--border); border-top-color: var(--accent); animation: spin 0.75s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    #loadingText { font-weight: 700; color: var(--primary); }
 
     /* ── 이미지 모달 ── */
-    .img-modal { position: fixed; inset: 0; z-index: 9500; display: none; justify-content: center; align-items: center; background: rgba(0,0,0,0.88); backdrop-filter: blur(8px); cursor: zoom-out; }
-    .img-modal img { max-width: 90%; max-height: 90%; border-radius: var(--radius); box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+    .img-modal { position: fixed; inset: 0; z-index: 9500; display: none; justify-content: center; align-items: center; background: rgba(0,0,0,0.9); cursor: zoom-out; }
+    .img-modal-inner { position: relative; display: flex; align-items: center; gap: 12px; }
+    .img-modal img { max-width: 88vw; max-height: 88vh; border-radius: var(--radius); display: block; cursor: default; }
+    .modal-nav { background: rgba(255,255,255,0.12); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: background 0.15s; flex-shrink: 0; }
+    .modal-nav:hover { background: rgba(255,255,255,0.25); }
+
+    /* ── 비번 모달 ── */
+    .pw-overlay { position: fixed; inset: 0; z-index: 9000; display: none; justify-content: center; align-items: center; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
+    .pw-overlay.show { display: flex; }
+    .pw-box { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 28px; width: 100%; max-width: 340px; box-shadow: var(--shadow-md); }
+    .pw-box p { font-weight: 700; margin-bottom: 14px; }
+    .pw-box .inp { margin-bottom: 14px; }
+    .pw-actions { display: flex; gap: 8px; justify-content: flex-end; }
 
     /* ── 공지 팝업 ── */
-    .popup-overlay { position: fixed; inset: 0; z-index: 8000; display: none; justify-content: center; align-items: center; background: rgba(0,0,0,0.5); backdrop-filter: blur(6px); }
+    .popup-overlay { position: fixed; inset: 0; z-index: 8000; display: none; justify-content: center; align-items: center; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
     .popup-overlay.show { display: flex; }
-    .popup-box { max-width: 460px; width: 90%; padding: 36px; border-radius: 28px; text-align: center; }
-    .popup-box h2 { font-size: 1.4rem; font-weight: 800; margin-bottom: 14px; background: linear-gradient(135deg, var(--primary), var(--primary2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .popup-msg { font-size: 1rem; line-height: 1.7; white-space: pre-wrap; word-break: break-all; margin-bottom: 24px; }
+    .popup-box { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 32px; max-width: 420px; width: 90%; box-shadow: var(--shadow-md); text-align: center; }
+    .popup-box h2 { font-size: 1.1rem; font-weight: 800; margin-bottom: 12px; }
+    .popup-msg { font-size: 0.9rem; color: var(--sub); line-height: 1.7; white-space: pre-wrap; word-break: break-all; margin-bottom: 22px; }
 
-    /* ── 관리자 패널 ── */
-    .admin-panel { padding: 28px; border-radius: 28px; margin-top: 20px; }
-    .admin-panel h2 { font-size: 1.2rem; font-weight: 800; margin-bottom: 20px; }
-    .edit-banner { background: rgba(108,142,247,0.12); border: 1px solid rgba(108,142,247,0.3); border-radius: var(--radius-sm); padding: 14px 18px; font-weight: 700; color: var(--primary); margin-bottom: 16px; }
-    .checkbox-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; background: var(--input-bg); padding: 18px; border-radius: var(--radius-sm); border: 1px solid var(--glass-border); margin-bottom: 14px; }
-    .checkbox-grid hr { grid-column: span 3; border: none; border-top: 1px solid var(--glass-border); }
-    .checkbox-grid label { display: flex; align-items: center; gap: 6px; font-weight: 700; cursor: pointer; }
-    .status-pill { border: 1px solid; border-radius: 50px; padding: 4px 12px; font-weight: 700; font-size: 0.82rem; cursor: pointer; outline: none; font-family: inherit; transition: 0.2s; }
-    .status-pill.on { color: var(--primary); background: rgba(108,142,247,0.1); border-color: rgba(108,142,247,0.4); }
-    .status-pill.off { color: #ef4444; background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.3); }
-    .admin-list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: var(--input-bg); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
-
-    /* ── 반응형 ── */
-    @media (max-width: 600px) {
-      .form-row { grid-template-columns: 1fr 1fr; }
-      .form-row > *:last-child { grid-column: span 2; }
-      .board-title { font-size: 1.6rem; }
-    }
+    /* ── 관리자 ── */
+    .admin-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 26px; margin-top: 20px; }
+    .admin-panel h2 { font-size: 1rem; font-weight: 800; margin-bottom: 20px; }
+    .edit-banner { background: var(--accent-light); border: 1px solid rgba(37,99,235,0.2); border-radius: var(--radius-sm); padding: 12px 16px; font-size: 0.88rem; font-weight: 700; color: var(--accent); margin-bottom: 14px; }
+    .checkbox-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; background: var(--bg); padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border); margin-bottom: 12px; }
+    .checkbox-grid hr { grid-column: span 3; border: none; border-top: 1px solid var(--border); }
+    .checkbox-grid label { display: flex; align-items: center; gap: 6px; font-size: 0.88rem; font-weight: 600; cursor: pointer; }
+    .status-pill { border-radius: 50px; padding: 4px 12px; font-weight: 700; font-size: 0.78rem; cursor: pointer; border: 1px solid; font-family: inherit; transition: 0.15s; }
+    .status-pill.on { color: var(--accent); background: var(--accent-light); border-color: rgba(37,99,235,0.3); }
+    .status-pill.off { color: #ef4444; background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.25); }
+    .admin-item { display: flex; justify-content: space-between; align-items: center; padding: 11px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 8px; flex-wrap: wrap; gap: 8px; }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
   </style>
 </head>
 <body>
-<div class="blob-wrap" aria-hidden="true">
-  <div class="blob"></div>
-  <div class="blob"></div>
-  <div class="blob"></div>
-</div>
 
-<div id="loadingOverlay"><div class="spinner"></div><div id="loadingText">처리 중...</div></div>
-<div id="imageModal" class="img-modal" onclick="closeModal()"><img id="modalImg" src="" alt=""></div>
+<!-- 로딩 -->
+<div id="loadingOverlay"><div class="spinner"></div></div>
 
-<!-- 공지 팝업 -->
-<div id="popupOverlay" class="popup-overlay">
-  <div class="popup-box glass">
-    <h2>📢 공지사항</h2>
-    <div id="popupMsg" class="popup-msg"></div>
-    <button class="btn primary" onclick="closePopup()">확인</button>
+<!-- 이미지 모달 -->
+<div id="imageModal" class="img-modal" onclick="handleModalClick(event)">
+  <div class="img-modal-inner" onclick="event.stopPropagation()">
+    <button class="modal-nav" id="modalPrev" onclick="modalNav(-1)">‹</button>
+    <img id="modalImg" src="" alt="">
+    <button class="modal-nav" id="modalNext" onclick="modalNav(1)">›</button>
   </div>
 </div>
 
+<!-- 비번 모달 -->
+<div id="pwOverlay" class="pw-overlay">
+  <div class="pw-box">
+    <p id="pwLabel">비밀번호</p>
+    <input class="inp" id="pwInput" type="password" placeholder="비밀번호 입력" onkeydown="if(event.key==='Enter')pwConfirm()">
+    <div class="pw-actions">
+      <button class="btn ghost" onclick="pwCancel()">취소</button>
+      <button class="btn accent" onclick="pwConfirm()">확인</button>
+    </div>
+  </div>
+</div>
+
+<!-- 공지 팝업 -->
+<div id="popupOverlay" class="popup-overlay">
+  <div class="popup-box">
+    <h2>공지사항</h2>
+    <div id="popupMsg" class="popup-msg"></div>
+    <button class="btn accent" onclick="closePopup()">확인</button>
+  </div>
+</div>
+
+<!-- 네비 -->
+<nav class="nav">
+  <div class="nav-left">
+    <span class="nav-logo">관산중</span>
+    <button class="btn lang-btn active" id="btn-ko" onclick="setLanguage('ko')">한</button>
+    <button class="btn lang-btn" id="btn-zh" onclick="setLanguage('zh')">中</button>
+    <button class="btn lang-btn" id="btn-ru" onclick="setLanguage('ru')">РУ</button>
+  </div>
+  <div class="nav-right">
+    <button class="btn ghost" onclick="goHome()">홈</button>
+    <button class="btn ghost" onclick="toggleAdmin()">관리</button>
+    <button class="dark-toggle" onclick="toggleDark()" title="다크모드"></button>
+  </div>
+  <button class="hamburger" onclick="toggleMobileMenu()" aria-label="메뉴">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- 모바일 메뉴 -->
+<div id="mobileMenu" class="mobile-menu">
+  <button class="btn ghost" onclick="goHome();closeMobileMenu()">🏠 홈</button>
+  <button class="btn ghost" onclick="toggleAdmin();closeMobileMenu()">⚙️ 관리</button>
+  <div style="display:flex;gap:8px;">
+    <button class="btn lang-btn" id="m-btn-ko" onclick="setLanguage('ko');closeMobileMenu()">한</button>
+    <button class="btn lang-btn" id="m-btn-zh" onclick="setLanguage('zh');closeMobileMenu()">中</button>
+    <button class="btn lang-btn" id="m-btn-ru" onclick="setLanguage('ru');closeMobileMenu()">РУ</button>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span style="font-size:0.85rem;font-weight:600;color:var(--sub);">다크모드</span>
+    <button class="dark-toggle" onclick="toggleDark()"></button>
+  </div>
+</div>
+
+<!-- 앱 -->
 <div id="app">
-  <!-- 네비 -->
-  <nav class="top-nav glass">
-    <div class="nav-left">
-      <button class="btn lang-btn active" id="btn-ko" onclick="setLanguage('ko')">한</button>
-      <button class="btn lang-btn" id="btn-zh" onclick="setLanguage('zh')">中</button>
-      <button class="btn lang-btn" id="btn-ru" onclick="setLanguage('ru')">РУ</button>
-    </div>
-    <div class="nav-right">
-      <button class="btn" onclick="goHome()">🏠 홈</button>
-      <button class="btn" onclick="toggleAdmin()">⚙️ 관리</button>
-      <button class="dark-toggle" onclick="toggleDark()" title="다크모드"></button>
-    </div>
-  </nav>
-
-  <div class="container">
-    <!-- 스텝 1 -->
-    <div id="step1" class="select-card glass">
-      <h1>관산중학교 정보 게시판</h1>
-      <div class="field">
-        <label>학년</label>
-        <select class="glass-select" id="grade" onchange="updateClassList()">
-          <option>1학년</option><option>2학년</option><option>3학년</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>반</label>
-        <select class="glass-select" id="group" onchange="updateClassList()">
-          <option>1반</option><option>2반</option><option>3반</option><option>4반</option><option>5반</option>
-        </select>
-      </div>
-      <div class="field" style="margin-bottom:28px;">
-        <label>수업 선택</label>
-        <select class="glass-select" id="classList"><option>수업을 선택하세요</option></select>
-      </div>
-      <button class="btn primary full" id="ui-enter-btn" onclick="startBoard()">입장하기</button>
-    </div>
-
-    <!-- 스텝 2 -->
-    <div id="step2" class="hidden">
-      <div class="board-header">
-        <div>
-          <div id="boardTitle" class="board-title"></div>
-          <div id="boardDesc" class="board-desc"></div>
+  <!-- 스텝 1 -->
+  <div id="step1">
+    <div class="step1-wrap">
+      <div class="select-card">
+        <h1>정보 <span>게시판</span></h1>
+        <div class="field"><label>학년</label>
+          <select class="inp" id="grade" onchange="updateClassList()">
+            <option>1학년</option><option>2학년</option><option>3학년</option>
+          </select>
         </div>
-        <button class="btn" onclick="manualRefresh()">🔄 새로고침</button>
+        <div class="field"><label>반</label>
+          <select class="inp" id="group" onchange="updateClassList()">
+            <option>1반</option><option>2반</option><option>3반</option><option>4반</option><option>5반</option>
+          </select>
+        </div>
+        <div class="field" style="margin-bottom:24px;"><label>수업</label>
+          <select class="inp" id="classList"><option>수업을 선택하세요</option></select>
+        </div>
+        <button class="btn accent full" id="ui-enter-btn" onclick="startBoard()">입장하기</button>
       </div>
+    </div>
+  </div>
 
-      <!-- 검색 -->
+  <!-- 스텝 2 -->
+  <div id="step2" class="wrap hidden">
+    <div class="board-header">
+      <div>
+        <div id="boardTitle" class="board-title"></div>
+        <div id="boardDesc" class="board-desc"></div>
+      </div>
+      <div class="header-actions">
+        <button class="btn" onclick="manualRefresh()">새로고침</button>
+      </div>
+    </div>
+
+    <!-- 작성 폼 -->
+    <div class="form-card">
+      <form id="postForm" onsubmit="submitPost(event)">
+        <div class="form-row">
+          <input class="inp" id="p_num" placeholder="번호" required>
+          <input class="inp" id="p_name" placeholder="이름" required>
+          <input class="inp" id="p_pw_display" type="password" placeholder="비번" required>
+        </div>
+        <input class="inp" id="p_sub" placeholder="제목" required style="margin-bottom:8px;">
+        <textarea class="inp" id="p_msg" rows="4" placeholder="내용" required style="margin-bottom:10px;"></textarea>
+        <div class="upload-box" id="ui-upload-label" onclick="document.getElementById('fileInput').click()">
+          이미지 첨부 (클릭 또는 Ctrl+V, 최대 4장)
+          <div id="previewArea" class="preview-container"></div>
+        </div>
+        <input type="file" id="fileInput" class="hidden" accept="image/*" multiple onchange="handleFiles(this.files)">
+        <button id="subBtn" type="submit" class="btn accent full">게시물 등록</button>
+        <button id="cancelEditBtn" type="button" class="btn full hidden" style="margin-top:8px;" onclick="cancelEdit()">수정 취소</button>
+      </form>
+    </div>
+
+    <!-- 툴바 -->
+    <div class="toolbar">
       <div class="search-wrap">
         <span class="search-icon">🔍</span>
-        <input class="glass-input" id="searchInput" type="text" placeholder="게시물 검색..." oninput="filterPosts()">
+        <input class="inp" id="searchInput" type="text" placeholder="검색..." oninput="filterPosts()">
       </div>
-
-      <!-- 작성 폼 -->
-      <div class="form-card glass">
-        <form id="postForm" onsubmit="submitPost(event)">
-          <input type="hidden" id="f_mode" value="add">
-          <input type="hidden" id="f_postId">
-          <input type="hidden" id="f_lang" value="ko">
-          <input type="hidden" id="f_grade">
-          <input type="hidden" id="f_group">
-          <input type="hidden" id="f_class">
-          <div class="form-row">
-            <input class="glass-input" id="p_num" placeholder="번호" required>
-            <input class="glass-input" id="p_name" placeholder="이름" required>
-            <input class="glass-input" id="p_pw" type="password" placeholder="비번" required>
-          </div>
-          <input class="glass-input" id="p_sub" placeholder="제목" required style="margin-bottom:10px;">
-          <textarea class="glass-textarea" id="p_msg" rows="4" placeholder="내용을 입력하세요" required style="margin-bottom:12px;"></textarea>
-          <div class="upload-box" id="ui-upload-label" onclick="document.getElementById('fileInput').click()">
-            📷 클립보드 붙여넣기(Ctrl+V) 또는 클릭하여 이미지 첨부 (최대 4장)
-            <div id="previewArea" class="preview-container"></div>
-          </div>
-          <input type="file" id="fileInput" class="hidden" accept="image/*" multiple onchange="handleFiles(this.files)">
-          <button id="subBtn" type="submit" class="btn primary full">게시물 등록</button>
-          <button id="cancelEditBtn" type="button" class="btn full hidden" style="margin-top:10px;" onclick="cancelEdit()">수정 취소</button>
-        </form>
-      </div>
-
-      <div id="display" class="grid-board"></div>
-      <div style="text-align:center; margin: 32px 0;">
-        <button class="btn" onclick="goHome()">🏠 처음 화면으로</button>
+      <div class="sort-group">
+        <button id="sortNew" class="active" onclick="setSort('new')">최신순</button>
+        <button id="sortLike" onclick="setSort('like')">인기순</button>
       </div>
     </div>
 
-    <!-- 관리자 패널 -->
-    <div id="adminPanel" class="admin-panel glass hidden">
-      <h2>🛠 수업 관리 패널</h2>
+    <div id="display" class="grid-board"></div>
+
+    <div style="text-align:center;margin-top:32px;">
+      <button class="btn ghost" onclick="goHome()">← 처음으로</button>
+    </div>
+  </div>
+
+  <!-- 관리자 -->
+  <div id="adminPanel" class="wrap hidden" style="padding-top:0;">
+    <div class="admin-panel">
+      <h2>수업 관리</h2>
       <div id="adm_edit_info" class="edit-banner hidden"></div>
       <input type="hidden" id="adm_row">
       <input type="hidden" id="adm_grade_hidden">
@@ -413,16 +424,16 @@
         <label><input type="checkbox" class="adm-b" value="4반"> 4반</label>
         <label><input type="checkbox" class="adm-b" value="5반"> 5반</label>
       </div>
-      <input class="glass-input" id="adm_name" placeholder="수업명" style="margin-bottom:10px;">
-      <textarea class="glass-textarea" id="adm_desc" rows="2" placeholder="수업 상세 설명" style="margin-bottom:10px;"></textarea>
-      <textarea class="glass-textarea" id="adm_ex" rows="2" placeholder="선생님 안내 (게시판 최상단 고정)" style="margin-bottom:10px;"></textarea>
-      <textarea class="glass-textarea" id="adm_popup" rows="2" placeholder="공지사항 팝업 메시지 (입장 시 팝업 표시, 비워두면 미표시)" style="margin-bottom:16px;"></textarea>
+      <div class="field"><label>수업명</label><input class="inp" id="adm_name" placeholder="수업명"></div>
+      <div class="field"><label>설명</label><textarea class="inp" id="adm_desc" rows="2" placeholder="수업 상세 설명"></textarea></div>
+      <div class="field"><label>선생님 안내</label><textarea class="inp" id="adm_ex" rows="2" placeholder="게시판 최상단 고정 안내"></textarea></div>
+      <div class="field" style="margin-bottom:18px;"><label>공지 팝업</label><textarea class="inp" id="adm_popup" rows="2" placeholder="입장 시 팝업 (비워두면 미표시)"></textarea></div>
 
-      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;">
-        <button class="btn primary" onclick="saveAdminClass()">저장 / 내용 반영</button>
-        <button id="adm_cancel_btn" class="btn hidden" onclick="resetAdminForm()">작업 취소</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;">
+        <button class="btn accent" onclick="saveAdminClass()">저장</button>
+        <button id="adm_cancel_btn" class="btn hidden" onclick="resetAdminForm()">취소</button>
       </div>
-      <hr style="border:none; border-top:1px solid var(--glass-border); margin-bottom:20px;">
+      <hr class="divider">
       <div id="adminList"></div>
     </div>
   </div>
@@ -434,47 +445,84 @@
   let imgList = [];
   let currentPosts = [];
   let currentExample = '';
+  let currentSort = 'new';
+  let pwResolveCallback = null;
+  let modalImgList = [];
+  let modalImgIndex = 0;
   const MASTER_PW = "9600";
 
   const uiText = {
-    ko: { opt:"수업을 선택하세요", enter:"입장하기", upload:"📷 클립보드 붙여넣기(Ctrl+V) 또는 클릭하여 이미지 첨부", submit:"게시물 등록", edit_finish:"수정 완료", loading:"데이터 불러오는 중...", translating:"번역 중..." },
-    zh: { opt:"请选择课程", enter:"进入", upload:"📷 粘贴或点击上传图片", submit:"发布", edit_finish:"完成修改", loading:"加载中...", translating:"翻译中..." },
-    ru: { opt:"Выберите урок", enter:"Войти", upload:"📷 Вставьте или нажмите для загрузки фото", submit:"Опубликовать", edit_finish:"Изм.завершено", loading:"Загрузка...", translating:"Перевод..." }
+    ko: { opt:"수업을 선택하세요", enter:"입장하기", submit:"게시물 등록", edit_finish:"수정 완료", loading:"불러오는 중..." },
+    zh: { opt:"请选择课程", enter:"进入", submit:"发布", edit_finish:"完成修改", loading:"加载中..." },
+    ru: { opt:"Выберите урок", enter:"Войти", submit:"Опубликовать", edit_finish:"Изм.завершено", loading:"Загрузка..." }
   };
 
   // ── API ──
   async function callApi(fn, params) {
-    const res = await fetch('/api', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fn, ...params }),
-    });
+    const res = await fetch('/api', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({fn,...params}) });
     const json = await res.json();
     if (!json.ok) throw new Error(json.error || '서버 오류');
     return json.result;
   }
 
-  // ── 다크모드 ──
-  function toggleDark() {
-    document.body.classList.toggle('dark');
-    localStorage.setItem('dark', document.body.classList.contains('dark') ? '1' : '0');
+  // ── 비번 모달 ──
+  function askPassword(label) {
+    return new Promise(resolve => {
+      pwResolveCallback = resolve;
+      document.getElementById('pwLabel').innerText = label || '비밀번호';
+      document.getElementById('pwInput').value = '';
+      document.getElementById('pwOverlay').classList.add('show');
+      setTimeout(() => document.getElementById('pwInput').focus(), 100);
+    });
   }
+  function pwConfirm() {
+    const v = document.getElementById('pwInput').value;
+    document.getElementById('pwOverlay').classList.remove('show');
+    if (pwResolveCallback) { pwResolveCallback(v); pwResolveCallback = null; }
+  }
+  function pwCancel() {
+    document.getElementById('pwOverlay').classList.remove('show');
+    if (pwResolveCallback) { pwResolveCallback(null); pwResolveCallback = null; }
+  }
+
+  // ── 다크모드 ──
+  function toggleDark() { document.body.classList.toggle('dark'); localStorage.setItem('dark', document.body.classList.contains('dark') ? '1' : '0'); }
   if (localStorage.getItem('dark') === '1') document.body.classList.add('dark');
 
-  // ── 로딩 ──
-  function toggleLoading(show, text) {
-    document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
-    if (text) document.getElementById('loadingText').innerText = text;
-  }
+  // ── 모바일 메뉴 ──
+  function toggleMobileMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+  function closeMobileMenu() { document.getElementById('mobileMenu').classList.remove('open'); }
 
-  // ── 모달 ──
-  function openModal(src) { document.getElementById('modalImg').src = src; document.getElementById('imageModal').style.display = 'flex'; }
+  // ── 로딩 ──
+  function toggleLoading(show) { document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none'; }
+
+  // ── 이미지 모달 ──
+  function openModal(imgs, idx) {
+    modalImgList = imgs; modalImgIndex = idx;
+    document.getElementById('modalImg').src = imgs[idx];
+    document.getElementById('modalPrev').style.display = imgs.length > 1 ? 'flex' : 'none';
+    document.getElementById('modalNext').style.display = imgs.length > 1 ? 'flex' : 'none';
+    document.getElementById('imageModal').style.display = 'flex';
+  }
+  function handleModalClick(e) { if (e.target === document.getElementById('imageModal')) closeModal(); }
   function closeModal() { document.getElementById('imageModal').style.display = 'none'; }
+  function modalNav(dir) {
+    modalImgIndex = (modalImgIndex + dir + modalImgList.length) % modalImgList.length;
+    document.getElementById('modalImg').src = modalImgList[modalImgIndex];
+  }
+  document.addEventListener('keydown', e => {
+    if (document.getElementById('imageModal').style.display === 'flex') {
+      if (e.key === 'ArrowLeft') modalNav(-1);
+      if (e.key === 'ArrowRight') modalNav(1);
+      if (e.key === 'Escape') closeModal();
+    }
+    if (document.getElementById('pwOverlay').classList.contains('show') && e.key === 'Escape') pwCancel();
+  });
 
   // ── 공지 팝업 ──
   function showPopup(msg) {
     if (!msg) return;
-    const key = 'popup_' + document.getElementById('f_class').value + document.getElementById('f_grade').value + document.getElementById('f_group').value;
+    const key = 'popup_' + document.getElementById('f_class').value;
     if (sessionStorage.getItem(key)) return;
     sessionStorage.setItem(key, '1');
     document.getElementById('popupMsg').innerText = msg;
@@ -482,34 +530,38 @@
   }
   function closePopup() { document.getElementById('popupOverlay').classList.remove('show'); }
 
-  // ── 메시지 포맷 ──
-  function formatMessage(text) {
-    if (!text) return "";
-    let safe = text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-    return safe.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+  // ── 포맷 ──
+  function fmtMsg(text) {
+    if (!text) return '';
+    let s = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return s.replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
   }
 
   // ── 언어 ──
   function setLanguage(lang) {
-    const isRefresh = !document.getElementById('step2').classList.contains('hidden');
-    if (isRefresh) toggleLoading(true, uiText[lang].translating);
+    const refreshing = !document.getElementById('step2').classList.contains('hidden');
     currentLang = lang;
-    document.getElementById('f_lang').value = lang;
-    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.id === 'btn-' + lang));
+    ['ko','zh','ru'].forEach(l => {
+      document.getElementById('btn-'+l)?.classList.toggle('active', l===lang);
+      document.getElementById('m-btn-'+l)?.classList.toggle('active', l===lang);
+    });
     document.getElementById('ui-enter-btn').innerText = uiText[lang].enter;
-    document.getElementById('ui-upload-label').firstChild.textContent = uiText[lang].upload;
-    document.getElementById('subBtn').innerText = document.getElementById('f_mode').value === 'edit' ? uiText[lang].edit_finish : uiText[lang].submit;
+    document.getElementById('subBtn').innerText = document.getElementById('f_mode')?.value === 'edit' ? uiText[lang].edit_finish : uiText[lang].submit;
     updateClassList();
-    if (isRefresh) manualRefresh();
+    if (refreshing) manualRefresh();
   }
+
+  // ── 숨겨진 폼 필드 ──
+  function getHidden(id) { let el = document.getElementById(id); return el ? el.value : ''; }
+  function setHidden(id, val) { let el = document.getElementById(id); if (!el) { el = document.createElement('input'); el.type='hidden'; el.id=id; document.body.appendChild(el); } el.value = val; }
 
   function updateClassList() {
     callApi('getInitData', { grade: document.getElementById('grade').value, group: document.getElementById('group').value })
       .then(data => {
         const sel = document.getElementById('classList');
         sel.innerHTML = `<option>${uiText[currentLang].opt}</option>`;
-        (data.classList || []).forEach(c => sel.innerHTML += `<option>${c.name}</option>`);
-      }).catch(() => {});
+        (data.classList||[]).forEach(c => sel.innerHTML += `<option>${c.name}</option>`);
+      }).catch(()=>{});
   }
 
   function goHome() {
@@ -520,54 +572,69 @@
   }
 
   function toggleAdmin() {
-    const pw = prompt("관리자 PW:");
-    if (pw !== MASTER_PW) return;
-    document.getElementById('adminPanel').classList.toggle('hidden');
-    if (!document.getElementById('adminPanel').classList.contains('hidden')) {
-      loadAdminList();
-      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    }
+    askPassword('관리자 비밀번호').then(pw => {
+      if (pw !== MASTER_PW) return;
+      document.getElementById('adminPanel').classList.toggle('hidden');
+      if (!document.getElementById('adminPanel').classList.contains('hidden')) {
+        loadAdminList();
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      }
+    });
   }
 
   function startBoard() {
     const cls = document.getElementById('classList').value;
-    if (cls.includes("선택")) return;
-    toggleLoading(true, uiText[currentLang].loading);
-    document.getElementById('f_grade').value = document.getElementById('grade').value;
-    document.getElementById('f_group').value = document.getElementById('group').value;
-    document.getElementById('f_class').value = cls;
+    if (cls.includes('선택')) return;
+    setHidden('f_mode','add'); setHidden('f_postId','');
+    setHidden('f_grade', document.getElementById('grade').value);
+    setHidden('f_group', document.getElementById('group').value);
+    setHidden('f_class', cls);
     document.getElementById('step1').classList.add('hidden');
     document.getElementById('step2').classList.remove('hidden');
     manualRefresh();
   }
 
-  function manualRefresh() {
-    toggleLoading(true, uiText[currentLang].loading);
-    callApi('getPosts', {
-      classTitle: document.getElementById('f_class').value,
-      grade: document.getElementById('f_grade').value,
-      group: document.getElementById('f_group').value,
-      targetLang: currentLang,
-    }).then(data => {
-      document.getElementById('boardTitle').innerText = data.title;
-      document.getElementById('boardDesc').innerText = data.desc;
-      currentPosts = data.posts;
-      currentExample = data.example;
-      render(data.example, data.posts);
-      toggleLoading(false);
-      if (data.popup) showPopup(data.popup);
-    }).catch(() => toggleLoading(false));
+  function showSkeleton() {
+    document.getElementById('display').innerHTML = Array(6).fill(`
+      <div class="skel-card">
+        <div class="skeleton skel-line" style="width:60%;"></div>
+        <div class="skeleton skel-line" style="width:90%;margin-bottom:4px;"></div>
+        <div class="skeleton skel-line" style="width:75%;"></div>
+        <div class="skeleton skel-img"></div>
+      </div>`).join('');
   }
 
-  // ── 검색 필터 ──
+  function manualRefresh() {
+    showSkeleton();
+    callApi('getPosts', { classTitle:getHidden('f_class'), grade:getHidden('f_grade'), group:getHidden('f_group'), targetLang:currentLang })
+      .then(data => {
+        document.getElementById('boardTitle').innerText = data.title;
+        document.getElementById('boardDesc').innerText = data.desc;
+        currentPosts = data.posts; currentExample = data.example;
+        render(data.example, sortedPosts());
+        if (data.popup) showPopup(data.popup);
+      }).catch(()=>{ document.getElementById('display').innerHTML = ''; });
+  }
+
+  // ── 정렬 ──
+  function setSort(type) {
+    currentSort = type;
+    document.getElementById('sortNew').classList.toggle('active', type==='new');
+    document.getElementById('sortLike').classList.toggle('active', type==='like');
+    render(currentExample, sortedPosts());
+  }
+  function sortedPosts() {
+    const p = [...currentPosts];
+    if (currentSort === 'like') p.sort((a,b) => (b.pinned?1:0)-(a.pinned?1:0) || b.likes-a.likes);
+    // 기본은 서버에서 내려온 순서(최신+핀 우선) 유지
+    return p;
+  }
+
+  // ── 검색 ──
   function filterPosts() {
     const q = document.getElementById('searchInput').value.trim().toLowerCase();
-    if (!q) { render(currentExample, currentPosts); return; }
-    const filtered = currentPosts.filter(p =>
-      (p.subject||'').toLowerCase().includes(q) ||
-      (p.message||'').toLowerCase().includes(q) ||
-      (p.name||'').toLowerCase().includes(q)
-    );
+    if (!q) { render(currentExample, sortedPosts()); return; }
+    const filtered = sortedPosts().filter(p => (p.subject||'').toLowerCase().includes(q) || (p.message||'').toLowerCase().includes(q) || (p.name||'').toLowerCase().includes(q));
     render(currentExample, filtered, true);
   }
 
@@ -576,297 +643,258 @@
     const display = document.getElementById('display');
     let html = '';
     if (ex && !isFiltered) {
-      html += `<div class="post-card teacher-card visible"><div class="post-sub">📌 선생님 안내</div><div class="post-msg">${formatMessage(ex)}</div></div>`;
+      html += `<div class="post-card teacher-card visible"><div class="post-sub">📌 선생님 안내</div><div class="post-msg">${fmtMsg(ex)}</div></div>`;
     }
+    if (!posts.length) { display.innerHTML = html + `<div style="text-align:center;padding:40px 0;color:var(--sub);font-size:0.9rem;">게시물이 없습니다.</div>`; return; }
 
-    const colCount = window.innerWidth > 1200 ? 4 : window.innerWidth > 800 ? 3 : window.innerWidth > 500 ? 2 : 1;
-    const columns = Array.from({ length: colCount }, () => []);
-    posts.forEach((p, i) => columns[i % colCount].push(p));
-    const sorted = columns.flat();
-
-    sorted.forEach((p, i) => {
-      const hasLiked = localStorage.getItem('voted_' + p.id);
-      const sliderHtml = buildSlider(p.imgs, p.id);
-      html += `<div class="post-card ${p.pinned ? 'pinned-card' : ''}" data-id="${p.id}">
-        ${p.pinned ? '<span class="pin-badge">📌 고정됨</span>' : ''}
+    const colCount = window.innerWidth > 900 ? 3 : window.innerWidth > 500 ? 2 : 1;
+    const cols = Array.from({length:colCount}, ()=>[]);
+    posts.forEach((p,i) => cols[i%colCount].push(p));
+    cols.flat().forEach((p,i) => {
+      const hasLiked = localStorage.getItem('voted_'+p.id);
+      html += `<div class="post-card ${p.pinned?'pinned-card':''}" data-id="${p.id}">
+        ${p.pinned ? '<div class="pin-badge">📌 고정</div>' : ''}
         <div class="post-sub">${p.subject}</div>
-        <div class="post-msg">${formatMessage(p.message)}</div>
-        ${sliderHtml}
+        <div class="post-msg">${fmtMsg(p.message)}</div>
+        ${buildSlider(p.imgs, p.id)}
         <div class="post-meta">
-          <div class="like-area ${hasLiked ? 'voted' : ''}" onclick="toggleLikeUI('${p.id}', this)">
-            <span style="font-size:1.1rem;">❤️</span>
-            <span class="like-count" style="font-weight:800;">${p.likes}</span>
+          <div class="like-area ${hasLiked?'voted':''}" onclick="toggleLikeUI('${p.id}',this)">
+            <span>❤</span><span class="like-count" style="font-weight:700;">${p.likes}</span>
           </div>
           <div class="action-links">
-            <a class="pin-link ${p.pinned ? 'is-pinned' : ''}" onclick="handlePinClick('${p.id}')">📌</a>
+            <a class="pin-link ${p.pinned?'is-pinned':''}" onclick="handlePinClick('${p.id}')">핀</a>
             <a onclick="handleEditClick('${p.id}')">수정</a>
-            <a onclick="openDelete('${p.id}')" style="color:#ef4444;">삭제</a>
+            <a class="del-link" onclick="openDelete('${p.id}')">삭제</a>
           </div>
         </div>
         <div class="post-byline">${p.name}(${p.num}) · ${p.time}</div>
       </div>`;
     });
-
     display.innerHTML = html;
 
-    // 카드 등장 애니메이션
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
-    }, { threshold: 0.08 });
-    document.querySelectorAll('.post-card:not(.teacher-card):not(.visible)').forEach(c => observer.observe(c));
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.05 });
+    display.querySelectorAll('.post-card:not(.teacher-card):not(.visible)').forEach(c => obs.observe(c));
   }
 
-  // ── 이미지 슬라이더 ──
-  function buildSlider(imgs, postId) {
-    if (!imgs || imgs.length === 0) return '';
-    if (imgs.length === 1) {
-      return `<div class="img-slider"><div class="slides-track"><img src="${imgs[0]}" onclick="openModal('${imgs[0]}')" loading="lazy"></div></div>`;
-    }
-    const slides = imgs.map(s => `<img src="${s}" onclick="openModal('${s}')" loading="lazy">`).join('');
-    const dots = imgs.map((_, i) => `<span class="s-dot ${i===0?'active':''}" onclick="slideTo('${postId}',${i})"></span>`).join('');
-    return `<div class="img-slider" id="slider_${postId}">
-      <div class="slides-track" id="track_${postId}">${slides}</div>
-      <button class="slider-btn slider-prev" onclick="slidePrev('${postId}',${imgs.length})">‹</button>
-      <button class="slider-btn slider-next" onclick="slideNext('${postId}',${imgs.length})">›</button>
+  // ── 슬라이더 ──
+  function buildSlider(imgs, pid) {
+    if (!imgs||!imgs.length) return '';
+    if (imgs.length===1) return `<div class="img-slider"><div class="slides-track"><img src="${imgs[0]}" onclick="openModal(['${imgs[0]}'],0)" loading="lazy"></div></div>`;
+    const slides = imgs.map((s,i) => `<img src="${s}" onclick="openModal(${JSON.stringify(imgs)},${i})" loading="lazy">`).join('');
+    const dots = imgs.map((_,i) => `<span class="s-dot ${i===0?'active':''}" onclick="slideTo('${pid}',${i})"></span>`).join('');
+    return `<div class="img-slider" id="slider_${pid}">
+      <div class="slides-track" id="track_${pid}">${slides}</div>
+      <button class="slider-btn slider-prev" onclick="slidePrev('${pid}',${imgs.length})">‹</button>
+      <button class="slider-btn slider-next" onclick="slideNext('${pid}',${imgs.length})">›</button>
       <div class="slider-dots">${dots}</div>
     </div>`;
   }
 
-  const sliderIndex = {};
-  function slideTo(id, idx) {
-    sliderIndex[id] = idx;
-    const track = document.getElementById('track_' + id);
-    if (!track) return;
-    track.style.transform = `translateX(-${idx * 100}%)`;
-    document.querySelectorAll(`#slider_${id} .s-dot`).forEach((d, i) => d.classList.toggle('active', i === idx));
+  const sliderIdx = {};
+  function slideTo(id,idx) {
+    sliderIdx[id]=idx;
+    const t=document.getElementById('track_'+id); if(!t)return;
+    t.style.transform=`translateX(-${idx*100}%)`;
+    document.querySelectorAll(`#slider_${id} .s-dot`).forEach((d,i)=>d.classList.toggle('active',i===idx));
   }
-  function slideNext(id, len) { slideTo(id, ((sliderIndex[id]||0) + 1) % len); }
-  function slidePrev(id, len) { slideTo(id, ((sliderIndex[id]||0) - 1 + len) % len); }
+  function slideNext(id,len){slideTo(id,((sliderIdx[id]||0)+1)%len);}
+  function slidePrev(id,len){slideTo(id,((sliderIdx[id]||0)-1+len)%len);}
+
+  // 터치 스와이프
+  let touchX = null;
+  document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, {passive:true});
+  document.addEventListener('touchend', e => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) < 40) { touchX=null; return; }
+    const slider = e.target.closest('.img-slider');
+    if (!slider) { touchX=null; return; }
+    const id = slider.id.replace('slider_','');
+    const track = document.getElementById('track_'+id);
+    if (!track) { touchX=null; return; }
+    const len = track.children.length;
+    dx < 0 ? slideNext(id,len) : slidePrev(id,len);
+    touchX = null;
+  }, {passive:true});
 
   // ── 좋아요 ──
   function toggleLikeUI(id, el) {
-    const hasLiked = localStorage.getItem('voted_' + id);
-    const countEl = el.querySelector('.like-count');
-    let cur = parseInt(countEl.innerText);
-    el.classList.add('animate');
-    setTimeout(() => el.classList.remove('animate'), 400);
-    if (hasLiked) {
-      countEl.innerText = Math.max(0, cur - 1);
-      el.classList.remove('voted');
-      localStorage.removeItem('voted_' + id);
-      callApi('toggleLike', { postId: id, isCancel: true }).catch(() => {});
-    } else {
-      countEl.innerText = cur + 1;
-      el.classList.add('voted');
-      localStorage.setItem('voted_' + id, 'true');
-      callApi('toggleLike', { postId: id, isCancel: false }).catch(() => {});
-    }
+    const hasLiked = localStorage.getItem('voted_'+id);
+    const cnt = el.querySelector('.like-count');
+    let cur = parseInt(cnt.innerText);
+    el.classList.add('animate'); setTimeout(()=>el.classList.remove('animate'),350);
+    if (hasLiked) { cnt.innerText=Math.max(0,cur-1); el.classList.remove('voted'); localStorage.removeItem('voted_'+id); callApi('toggleLike',{postId:id,isCancel:true}).catch(()=>{}); }
+    else { cnt.innerText=cur+1; el.classList.add('voted'); localStorage.setItem('voted_'+id,'1'); callApi('toggleLike',{postId:id,isCancel:false}).catch(()=>{}); }
   }
 
   // ── 핀 ──
-  function handlePinClick(postId) {
-    const pw = prompt("관리자 비밀번호:");
+  async function handlePinClick(postId) {
+    const pw = await askPassword('관리자 비밀번호');
     if (pw !== MASTER_PW) return;
-    const post = currentPosts.find(p => p.id === postId);
-    if (!post) return;
+    const post = currentPosts.find(p=>p.id===postId); if (!post) return;
     const isPinned = !post.pinned;
-    callApi('togglePin', { pw: MASTER_PW, postId, isPinned }).then(() => {
-      post.pinned = isPinned;
-      render(currentExample, currentPosts);
-    }).catch(err => alert(err.message));
+    callApi('togglePin',{pw:MASTER_PW,postId,isPinned}).then(()=>{
+      post.pinned=isPinned; render(currentExample, sortedPosts());
+    }).catch(err=>alert(err.message));
   }
 
   // ── 이미지 처리 ──
   function handleFiles(files) {
-    Array.from(files).forEach(file => {
-      if (imgList.length >= 4) return;
-      const reader = new FileReader();
-      reader.onload = e => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const max = 500; let w = img.width, h = img.height;
-          if (w > max || h > max) { if (w > h) { h *= max/w; w = max; } else { w *= max/h; h = max; } }
-          canvas.width = w; canvas.height = h;
-          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-          imgList.push(canvas.toDataURL('image/jpeg', 0.6));
-          updatePreview();
+    Array.from(files).forEach(file=>{
+      if(imgList.length>=4)return;
+      const r=new FileReader();
+      r.onload=e=>{
+        const img=new Image();
+        img.onload=()=>{
+          const c=document.createElement('canvas');
+          const max=500; let w=img.width,h=img.height;
+          if(w>max||h>max){if(w>h){h*=max/w;w=max;}else{w*=max/h;h=max;}}
+          c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
+          imgList.push(c.toDataURL('image/jpeg',0.6)); updatePreview();
         };
-        img.src = e.target.result;
+        img.src=e.target.result;
       };
-      reader.readAsDataURL(file);
+      r.readAsDataURL(file);
     });
   }
-  function updatePreview() {
-    document.getElementById('previewArea').innerHTML = imgList.map((s, i) =>
-      `<div class="preview-item"><img src="${s}"><button type="button" class="del-btn" onclick="removeImg(${i})">×</button></div>`
-    ).join('');
-  }
-  function removeImg(i) { imgList.splice(i, 1); updatePreview(); }
-  window.addEventListener('paste', e => {
-    if (document.getElementById('step2').classList.contains('hidden')) return;
-    const items = (e.clipboardData || e.originalEvent.clipboardData).items;
-    for (let item of items) { if (item.type.startsWith('image/')) handleFiles([item.getAsFile()]); }
+  function updatePreview(){document.getElementById('previewArea').innerHTML=imgList.map((s,i)=>`<div class="preview-item"><img src="${s}"><button type="button" class="del-btn" onclick="removeImg(${i})">×</button></div>`).join('');}
+  function removeImg(i){imgList.splice(i,1);updatePreview();}
+  window.addEventListener('paste',e=>{
+    if(document.getElementById('step2').classList.contains('hidden'))return;
+    const items=(e.clipboardData||e.originalEvent.clipboardData).items;
+    for(let item of items){if(item.type.startsWith('image/'))handleFiles([item.getAsFile()]);}
   });
 
   // ── 폼 제출 ──
-  function submitPost(event) {
+  async function submitPost(event) {
     event.preventDefault();
-    toggleLoading(true, "게시물 저장 및 자동 번역 중...");
-    document.getElementById('subBtn').disabled = true;
-    const params = {
-      mode: document.getElementById('f_mode').value,
-      postId: document.getElementById('f_postId').value,
-      targetLang: currentLang,
-      grade: document.getElementById('f_grade').value,
-      group: document.getElementById('f_group').value,
-      classTitle: document.getElementById('f_class').value,
-      num: document.getElementById('p_num').value,
-      name: document.getElementById('p_name').value,
-      password: document.getElementById('p_pw').value,
-      subject: document.getElementById('p_sub').value,
-      message: document.getElementById('p_msg').value,
-      combinedImageData: imgList.join('|'),
+    toggleLoading(true);
+    document.getElementById('subBtn').disabled=true;
+    const params={
+      mode:getHidden('f_mode'), postId:getHidden('f_postId'), targetLang:currentLang,
+      grade:getHidden('f_grade'), group:getHidden('f_group'), classTitle:getHidden('f_class'),
+      num:document.getElementById('p_num').value,
+      name:document.getElementById('p_name').value,
+      password:document.getElementById('p_pw_display').value,
+      subject:document.getElementById('p_sub').value,
+      message:document.getElementById('p_msg').value,
+      combinedImageData:imgList.join('|'),
     };
-    callApi('processForm', params).then(data => {
-      currentPosts = data.posts; currentExample = data.example;
-      render(data.example, data.posts);
+    callApi('processForm',params).then(data=>{
+      currentPosts=data.posts; currentExample=data.example;
+      render(data.example,sortedPosts());
       document.getElementById('postForm').reset();
       cancelEdit(); toggleLoading(false);
-    }).catch(err => { alert(err.message); document.getElementById('subBtn').disabled = false; toggleLoading(false); });
+      // 새 카드로 스크롤
+      setTimeout(()=>{ const first=document.querySelector('.grid-board .post-card:not(.teacher-card)'); if(first)first.scrollIntoView({behavior:'smooth',block:'center'}); },150);
+    }).catch(err=>{ alert(err.message); document.getElementById('subBtn').disabled=false; toggleLoading(false); });
   }
 
-  function handleEditClick(postId) {
-    const post = currentPosts.find(p => p.id === postId);
-    if (!post) return;
-    const pw = prompt("비밀번호를 입력하세요:");
-    if (!pw) return;
-    document.getElementById('f_mode').value = 'edit';
-    document.getElementById('f_postId').value = post.id;
-    document.getElementById('p_name').value = post.name;
-    document.getElementById('p_num').value = post.num;
-    document.getElementById('p_sub').value = post.origSub;
-    document.getElementById('p_msg').value = post.origMsg;
-    document.getElementById('p_pw').value = pw;
-    imgList = post.origImgs ? post.origImgs.split('|') : [];
-    updatePreview();
-    document.getElementById('subBtn').innerText = uiText[currentLang].edit_finish;
+  async function handleEditClick(postId) {
+    const post=currentPosts.find(p=>p.id===postId); if(!post)return;
+    const pw=await askPassword('비밀번호'); if(!pw)return;
+    setHidden('f_mode','edit'); setHidden('f_postId',post.id);
+    document.getElementById('p_name').value=post.name;
+    document.getElementById('p_num').value=post.num;
+    document.getElementById('p_sub').value=post.origSub;
+    document.getElementById('p_msg').value=post.origMsg;
+    document.getElementById('p_pw_display').value=pw;
+    imgList=post.origImgs?post.origImgs.split('|'):[]; updatePreview();
+    document.getElementById('subBtn').innerText=uiText[currentLang].edit_finish;
     document.getElementById('cancelEditBtn').classList.remove('hidden');
-    window.scrollTo({ top: document.querySelector('.form-card').offsetTop - 80, behavior: 'smooth' });
+    document.querySelector('.form-card').scrollIntoView({behavior:'smooth',block:'start'});
   }
 
-  function cancelEdit() {
+  function cancelEdit(){
     document.getElementById('postForm').reset();
-    document.getElementById('f_mode').value = 'add';
-    document.getElementById('f_postId').value = '';
-    imgList = []; updatePreview();
-    document.getElementById('subBtn').innerText = uiText[currentLang].submit;
-    document.getElementById('subBtn').disabled = false;
+    setHidden('f_mode','add'); setHidden('f_postId','');
+    imgList=[]; updatePreview();
+    document.getElementById('subBtn').innerText=uiText[currentLang].submit;
+    document.getElementById('subBtn').disabled=false;
     document.getElementById('cancelEditBtn').classList.add('hidden');
   }
 
-  function openDelete(id) {
-    const pw = prompt("비밀번호:");
-    if (!pw) return;
+  async function openDelete(id){
+    const pw=await askPassword('비밀번호'); if(!pw)return;
     toggleLoading(true);
-    callApi('processForm', {
-      mode: "delete", postId: id, password: pw,
-      classTitle: document.getElementById('f_class').value,
-      grade: document.getElementById('f_grade').value,
-      group: document.getElementById('f_group').value,
-      targetLang: currentLang,
-    }).then(data => {
-      currentPosts = data.posts; currentExample = data.example;
-      render(data.example, data.posts); toggleLoading(false);
-    }).catch(err => { alert(err.message); toggleLoading(false); });
+    callApi('processForm',{mode:'delete',postId:id,password:pw,classTitle:getHidden('f_class'),grade:getHidden('f_grade'),group:getHidden('f_group'),targetLang:currentLang})
+      .then(data=>{ currentPosts=data.posts; currentExample=data.example; render(data.example,sortedPosts()); toggleLoading(false); })
+      .catch(err=>{ alert(err.message); toggleLoading(false); });
   }
 
-  // ── 관리자 패널 ──
-  function loadAdminList() {
-    callApi('getSettingsList', { pw: MASTER_PW }).then(list => {
-      document.getElementById('adminList').innerHTML = list.map(c => `
-        <div class="admin-list-item">
+  // ── 관리자 ──
+  function loadAdminList(){
+    callApi('getSettingsList',{pw:MASTER_PW}).then(list=>{
+      document.getElementById('adminList').innerHTML=list.map(c=>`
+        <div class="admin-item">
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-            <select onchange="toggleClassStatus(${c.row}, this.value)" class="status-pill ${c.status==='ON'?'on':'off'}">
+            <select onchange="toggleClassStatus(${c.row},this.value)" class="status-pill ${c.status==='ON'?'on':'off'}">
               <option value="ON" ${c.status==='ON'?'selected':''}>ON</option>
               <option value="OFF" ${c.status==='OFF'?'selected':''}>OFF</option>
             </select>
-            <span style="font-size:0.95rem;">${c.grade} ${c.group} — <b>${c.name}</b></span>
+            <span style="font-size:0.88rem;">${c.grade} ${c.group} — <b>${c.name}</b></span>
           </div>
           <div style="display:flex;gap:12px;">
-            <a onclick='editAdminUI(${JSON.stringify(c)})' style="font-weight:700;color:var(--primary);cursor:pointer;">수정</a>
-            <a onclick="delAdminClass(${c.row})" style="color:#ef4444;font-weight:700;cursor:pointer;">삭제</a>
+            <a onclick='editAdminUI(${JSON.stringify(c)})' style="font-size:0.82rem;font-weight:700;color:var(--accent);cursor:pointer;">수정</a>
+            <a onclick="delAdminClass(${c.row})" style="font-size:0.82rem;font-weight:700;color:#ef4444;cursor:pointer;">삭제</a>
           </div>
         </div>`).join('');
-    }).catch(() => {});
+    }).catch(()=>{});
   }
 
-  function toggleClassStatus(row, status) {
-    toggleLoading(true, "상태 변경 중...");
-    callApi('updateClassStatus', { pw: MASTER_PW, row, newStatus: status }).then(() => {
-      loadAdminList(); updateClassList(); toggleLoading(false);
-    }).catch(() => toggleLoading(false));
-  }
-
-  function editAdminUI(c) {
-    document.getElementById('adm_row').value = c.row;
-    document.getElementById('adm_grade_hidden').value = c.grade;
-    document.getElementById('adm_group_hidden').value = c.group;
-    document.getElementById('adm_name').value = c.name;
-    document.getElementById('adm_desc').value = c.desc;
-    document.getElementById('adm_ex').value = c.ex;
-    document.getElementById('adm_popup').value = c.popup || '';
-    document.getElementById('adm_target_area').classList.add('hidden');
-    const info = document.getElementById('adm_edit_info');
-    info.classList.remove('hidden');
-    info.innerText = `✏️ 수정 중: [${c.grade} ${c.group}] ${c.name}`;
-    document.getElementById('adm_cancel_btn').classList.remove('hidden');
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-  }
-
-  function saveAdminClass() {
-    const rowId = document.getElementById('adm_row').value;
-    let targets = [], singleGrade = '', singleGroup = '';
-    if (rowId) {
-      singleGrade = document.getElementById('adm_grade_hidden').value;
-      singleGroup = document.getElementById('adm_group_hidden').value;
-    } else {
-      const gList = [...document.querySelectorAll('.adm-g:checked')].map(i => i.value);
-      const bList = [...document.querySelectorAll('.adm-b:checked')].map(i => i.value);
-      if (!gList.length || !bList.length) { alert("학년과 반을 각각 최소 하나씩 선택해주세요."); return; }
-      gList.forEach(g => bList.forEach(b => targets.push({ grade: g, group: b })));
-    }
-    toggleLoading(true, "설정 저장 중...");
-    callApi('addClass', { adminPw: MASTER_PW, classInfo: {
-      row: rowId,
-      name: document.getElementById('adm_name').value,
-      desc: document.getElementById('adm_desc').value,
-      ex: document.getElementById('adm_ex').value,
-      popup: document.getElementById('adm_popup').value,
-      status: '', targetClasses: targets, grade: singleGrade, group: singleGroup,
-    }}).then(() => {
-      alert("성공적으로 저장되었습니다.");
-      resetAdminForm(); loadAdminList(); updateClassList(); toggleLoading(false);
-    }).catch(err => { alert(err.message); toggleLoading(false); });
-  }
-
-  function delAdminClass(r) {
-    if (!confirm("정말로 삭제하시겠습니까?")) return;
+  function toggleClassStatus(row,status){
     toggleLoading(true);
-    callApi('deleteClass', { pw: MASTER_PW, row: r }).then(() => {
-      loadAdminList(); toggleLoading(false);
-    }).catch(() => toggleLoading(false));
+    callApi('updateClassStatus',{pw:MASTER_PW,row,newStatus:status}).then(()=>{ loadAdminList(); updateClassList(); toggleLoading(false); }).catch(()=>toggleLoading(false));
   }
 
-  function resetAdminForm() {
-    ['adm_row','adm_grade_hidden','adm_group_hidden','adm_name','adm_desc','adm_ex','adm_popup'].forEach(id => document.getElementById(id).value = '');
-    document.querySelectorAll('#adm_target_area input').forEach(i => i.checked = false);
+  function editAdminUI(c){
+    document.getElementById('adm_row').value=c.row;
+    document.getElementById('adm_grade_hidden').value=c.grade;
+    document.getElementById('adm_group_hidden').value=c.group;
+    document.getElementById('adm_name').value=c.name;
+    document.getElementById('adm_desc').value=c.desc;
+    document.getElementById('adm_ex').value=c.ex;
+    document.getElementById('adm_popup').value=c.popup||'';
+    document.getElementById('adm_target_area').classList.add('hidden');
+    const info=document.getElementById('adm_edit_info');
+    info.classList.remove('hidden'); info.innerText=`수정 중: [${c.grade} ${c.group}] ${c.name}`;
+    document.getElementById('adm_cancel_btn').classList.remove('hidden');
+    window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+  }
+
+  function saveAdminClass(){
+    const rowId=document.getElementById('adm_row').value;
+    let targets=[],sG='',sGr='';
+    if(rowId){ sG=document.getElementById('adm_grade_hidden').value; sGr=document.getElementById('adm_group_hidden').value; }
+    else{
+      const gL=[...document.querySelectorAll('.adm-g:checked')].map(i=>i.value);
+      const bL=[...document.querySelectorAll('.adm-b:checked')].map(i=>i.value);
+      if(!gL.length||!bL.length){alert('학년과 반을 각각 최소 하나씩 선택해주세요.');return;}
+      gL.forEach(g=>bL.forEach(b=>targets.push({grade:g,group:b})));
+    }
+    toggleLoading(true);
+    callApi('addClass',{adminPw:MASTER_PW,classInfo:{
+      row:rowId, name:document.getElementById('adm_name').value,
+      desc:document.getElementById('adm_desc').value, ex:document.getElementById('adm_ex').value,
+      popup:document.getElementById('adm_popup').value,
+      status:'', targetClasses:targets, grade:sG, group:sGr,
+    }}).then(()=>{ alert('저장되었습니다.'); resetAdminForm(); loadAdminList(); updateClassList(); toggleLoading(false); })
+      .catch(err=>{ alert(err.message); toggleLoading(false); });
+  }
+
+  function delAdminClass(r){ if(!confirm('삭제하시겠습니까?'))return; toggleLoading(true); callApi('deleteClass',{pw:MASTER_PW,row:r}).then(()=>{ loadAdminList(); toggleLoading(false); }).catch(()=>toggleLoading(false)); }
+
+  function resetAdminForm(){
+    ['adm_row','adm_grade_hidden','adm_group_hidden','adm_name','adm_desc','adm_ex','adm_popup'].forEach(id=>document.getElementById(id).value='');
+    document.querySelectorAll('#adm_target_area input').forEach(i=>i.checked=false);
     document.getElementById('adm_target_area').classList.remove('hidden');
     document.getElementById('adm_edit_info').classList.add('hidden');
     document.getElementById('adm_cancel_btn').classList.add('hidden');
   }
 
-  window.onload = () => { updateClassList(); setLanguage('ko'); };
+  window.onload=()=>{ updateClassList(); setLanguage('ko'); };
 </script>
 </body>
 </html>
